@@ -1,0 +1,45 @@
+name: '[frontend] PHPUnit'
+
+on:
+  # Run this on push to master
+  push:
+    branches:
+      - develop
+    paths:
+      - 'web/**'
+      - '.github/workflows/test-php.yaml'
+  # Run this on push to PRs, regardless of branch
+  pull_request:
+    paths:
+      - 'web/**'
+      - '.github/workflows/test-php.yaml'
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./web
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Composer Install
+        uses: php-actions/composer@v5
+        with:
+          version: 2
+          php_version: 7.4
+          args: --working-dir=web
+      - name: PHPUnit tests
+        uses: php-actions/phpunit@v2
+        with:
+          php_version: 7.4
+          php_extensions: xdebug dom sqlite
+          configuration: web/phpunit.xml
+          bootstrap: vendor/autoload.php
+          args: --coverage-clover=coverage.xml
+        env:
+          XDEBUG_MODE: coverage
+      - name: Code Coverage
+        uses: codecov/codecov-action@v1
+        with:
+          files: ./${{env.working-directory}}/coverage.xml
+          flags: unittests
