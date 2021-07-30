@@ -1,6 +1,7 @@
 @extends('layouts.legacy')
 
 @section('content')
+    Yee
     @if($pageNotExists == true)
         <p>
             The page {{$wikiPageName}} you want to access does not exist.

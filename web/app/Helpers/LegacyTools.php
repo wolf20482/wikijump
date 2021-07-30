@@ -19,7 +19,9 @@ use Wikidot\DB\Site;
 use Wikidot\DB\SitePeer;
 use Wikidot\DB\SiteViewerPeer;
 use Wikidot\Utils\GlobalProperties;
+use Wikidot\Utils\ProcessException;
 use Wikidot\Utils\UploadedFileFlowController;
+use Wikidot\Utils\WDPermissionException;
 use Wikidot\Utils\WDPermissionManager;
 use Wikidot\Utils\WDStringUtils;
 use Wikijump\Models\User;
@@ -60,28 +62,17 @@ class LegacyTools
         return ($id === User::ANONYMOUS_USER || $id === User::AUTOMATIC_USER);
     }
 
-    /**
-     * Bootstrap a runData instance and generate the needed vars to give to a blade template.
-     * @return array|string
-     * @throws \Wikidot\Utils\ProcessException
+    /** Convert a site unix name or custom domain to a Site object.
+     * @param string $siteHost A string to check, usually an HTTP_HOST header.
+     * @return Site|null
      */
-    public function generateScreenVars()
+    public function retrieveSite(string $siteHost) : ?Site
     {
-        /**
-         * Create a RunData instance.
-         */
-        $runData = new RunData();
-        $runData->init();
-        Ozone::setRunData($runData);
-        Log::debug('runData object created and initialized in LegacyTools::generateScreenVars()');
-
-        /**
-         * Determine if the host we received the connection on has a site associated with it.
-         */
-        $siteHost = $_SERVER["HTTP_HOST"];
         if (preg_match("/^([a-zA-Z0-9\-]+)\." . GlobalProperties::$URL_DOMAIN_PREG . "$/", $siteHost, $matches)==1) {
             $siteUnixName = $matches[1];
         }
+        /** Handle a spoofed header so it doesn't return 500. */
+        else { return null; }
 
         $c = new Criteria();
         $c->add("unix_name", $siteUnixName);
@@ -99,12 +90,13 @@ class LegacyTools
             // check for redirects
             $c = new Criteria();
             $q = "SELECT site.* FROM site, domain_redirect WHERE domain_redirect.url='".db_escape_string($siteHost)."' " .
-                "AND site.deleted = false AND site.site_id = domain_redirect.site_id LIMIT 1";
+                'AND site.deleted = false AND site.site_id = domain_redirect.site_id LIMIT 1';
             $c->setExplicitQuery($q);
             /** @var Site? $site */
             $site = SitePeer::instance()->selectOne($c);
+
             if ($site !== null) {
-                $newUrl = GlobalProperties::$HTTP_SCHEMA . "://" . $site->getDomain().$_SERVER['REQUEST_URI'];
+                $newUrl = GlobalProperties::$HTTP_SCHEMA . "://" . $site->getDomain() . $_SERVER['REQUEST_URI'];
                 header("HTTP/1.1 301 Moved Permanently");
                 header("Location: ".$newUrl);
                 exit();
@@ -112,9 +104,34 @@ class LegacyTools
         }
 
         if ($site === null) {
-            // echo file_get_contents(WIKIJUMP_ROOT."/resources/views/site_not_exists.html");
             return null;
         }
+
+        /** @var Site $site */
+        return $site;
+    }
+
+    /**
+     * Bootstrap a runData instance and generate the needed vars to give to a blade template.
+     * @return array|string
+     * @throws ProcessException|WDPermissionException
+     */
+    public function makeScreenVars()
+    {
+        /**
+         * Create a RunData instance.
+         */
+        $runData = new RunData();
+        $runData->init();
+        Ozone::setRunData($runData);
+        Log::debug('runData object created and initialized in LegacyTools::generateScreenVars()');
+
+        /**
+         * Determine if the host we received the connection on has a site associated with it.
+         */
+        $site = $this->retrieveSite($_SERVER["HTTP_HOST"]);
+
+        if ($site === null) {return null;}
 
         /**
          * Set site params
@@ -326,7 +343,7 @@ class LegacyTools
         $runData->setTemp("jsInclude", array());
         // process modules...
         $moduleProcessor = new ModuleProcessor($runData);
-        //$moduleProcessor->setJavascriptInline(true); // embed associated javascript files in <script> tags
+
         $moduleProcessor->setCssInline(true);
         $return['sideBar1Content'] = $moduleProcessor->process($return['sideBar1Content']);
         $return['topBarContent'] = $moduleProcessor->process($return['topBarContent']);
@@ -342,23 +359,6 @@ class LegacyTools
 
 
         $runData->handleSessionEnd();
-
-            // one more thing - some url will need to be rewritten if using HTTPS
-        if ($_SERVER['HTTPS']) {
-            // ?
-            // scripts
-        $rendered = preg_replace(';<script(.*?)src="'.GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST_PREG . '(.*?)</script>;s', '<script\\1src="https://' . GlobalProperties::$URL_HOST . '\\2</script>', $rendered);
-        $rendered = preg_replace(';<link(.*?)href="'.GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST_PREG . '(.*?)/>;s', '<link\\1href="https://' . GlobalProperties::$URL_HOST . '\\2/>', $rendered);
-        $rendered = preg_replace(';(<img\s+.*?src=")http(://' . GlobalProperties::$URL_HOST_PREG . '(.*?)/>);s', '\\1https\\2', $rendered);
-        do {
-        $renderedOld = $rendered;
-        $rendered = preg_replace(';(<style\s+[^>]*>.*?@import url\()http(://' . GlobalProperties::$URL_HOST_PREG . '.*?</style>);si', '\\1https\\2', $rendered);
-        } while ($renderedOld != $rendered);
-        }
-
-        echo str_replace("%%%CURRENT_TIMESTAMP%%%", (string)time(), $rendered);
-
-//        dd($rendered);
 
         /**
          * Custom Domain Script module injection
@@ -409,10 +409,6 @@ class LegacyTools
                 $o = array();
                 parse_str(preg_replace('/^.*?\?/', '', $_SERVER['REQUEST_URI']), $o);
                 $originalUrl = $o['origUrl'];
-            }
-
-            if ($site->getLanguage() != 'en') {
-                $loginDomain = $site->getLanguage();
             }
 
             $out  = '<a href="' . $url_prefix . '/auth:newaccount?origUrl='.urlencode(GlobalProperties::$HTTP_SCHEMA.'://').urlencode($originalUrl).'">'._('create account').'</a> '._('or') . ' ';
@@ -483,7 +479,7 @@ class LegacyTools
         $pl = $runData->getParameterList();
         $pageName = $runData->getTemp("pageUnixName");
 
-        $page = $runData->getTemp("page");//$pl->getParameterValue("page", "MODULE");
+        $page = $runData->getTemp("page");
 
         // get category name and get the category by name.
         // this should be enchanced to use memcache later

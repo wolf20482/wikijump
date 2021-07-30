@@ -16,7 +16,7 @@ class PageOptionsBottomModule extends Module
         $pl = $runData->getParameterList();
         $pageName = $runData->getTemp("pageUnixName");
 
-        $page = $runData->getTemp("page");//$pl->getParameterValue("page", "MODULE");
+        $page = $runData->getTemp("page");
 
         // get category name and get the category by name.
         // this should be enchanced to use memcache later

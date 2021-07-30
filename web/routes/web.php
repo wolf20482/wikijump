@@ -87,7 +87,7 @@ Route::get('/user--karma/{user}', function(User $user) {
  */
 Route::get('/what-is-a-wiki', function() {
    $legacy = new LegacyTools();
-   $values = $legacy->generateScreenVars();
+   $values = $legacy->makeScreenVars();
 //    /**
 //     * @var $site
 //     * @var $pageNotExists
