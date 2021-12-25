@@ -8,7 +8,7 @@ use Wikijump\Models\Settings;
 
 trait HasSettings
 {
-    abstract public function defaults(): array;
+    abstract public static function defaults(): array;
 
     /**
      * Add the relationship from the parent class to a Settings object.
