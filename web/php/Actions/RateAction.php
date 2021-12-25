@@ -107,7 +107,7 @@ class RateAction extends SmartyAction
         $c = new Criteria();
         $c->add("page_id", $page->getPageId());
         $v = PageRateVotePeer::instance()->selectOne($c);
-        $runData->ajaxResponseAdd("votes", count($v));
+        $runData->ajaxResponseAdd("votes", is_countable($v) ? count($v) : 0);
         $runData->ajaxResponseAdd("points", $rpoints);
     }
 
@@ -166,7 +166,7 @@ class RateAction extends SmartyAction
         $c = new Criteria();
         $c->add("page_id", $page->getPageId());
         $v = PageRateVotePeer::instance()->selectOne($c);
-        $runData->ajaxResponseAdd("votes", count($v));
+        $runData->ajaxResponseAdd("votes", is_countable($v) ? count($v) : 0);
         $runData->ajaxResponseAdd("points", $rpoints);
     }
 

@@ -14,6 +14,7 @@ use Wikidot\Utils\GlobalProperties;
  */
 class Utils {
 	public static function screenClassFind($template) {
+		$classFiles = [];
 		$classFilename = GlobalProperties :: $ABSOLUTE_PATH.WIKIJUMP_ROOT."/screen/".$template.".php";
 
 		if (!file_exists($classFilename)) {

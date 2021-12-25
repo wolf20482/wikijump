@@ -9,10 +9,8 @@ namespace Ozone\Framework\Database;
  */
 class PgResult implements DatabaseResult{
 
-	private $result;
-
-	public function __construct($pg_result) {
-		$this->result = $pg_result;
+	public function __construct(private $result)
+	{
 	}
 
 	public function nextRow() {

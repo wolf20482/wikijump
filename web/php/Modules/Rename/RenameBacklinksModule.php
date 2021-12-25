@@ -44,6 +44,6 @@ class RenameBacklinksModule extends SmartyModule
         $runData->contextAdd("pages", $pages);
         $runData->contextAdd("pagesI", $pagesI);
         $runData->contextAdd("merged", $merged);
-        $runData->contextAdd("pagesCount", count($pages));
+        $runData->contextAdd("pagesCount", is_countable($pages) ? count($pages) : 0);
     }
 }

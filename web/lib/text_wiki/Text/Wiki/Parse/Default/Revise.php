@@ -88,8 +88,8 @@ class Text_Wiki_Parse_Revise extends Text_Wiki_Parse {
         $insmark = $this->getConf('insmark'); // +++
 
         // '---' must be before '+++' (if they both appear)
-        $del = strpos($src, $delmark);
-        $ins = strpos($src, $insmark);
+        $del = strpos($src, (string) $delmark);
+        $ins = strpos($src, (string) $insmark);
 
         // if neither is found, return right away
         if ($del === false && $ins === false) {

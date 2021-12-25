@@ -23,7 +23,7 @@ class AccountInvitationsModule extends AccountBaseModule
 
         $invs = MemberInvitationPeer::instance()->select($c);
 
-        if (count($invs)>0) {
+        if ((is_countable($invs) ? count($invs) : 0)>0) {
             $runData->contextAdd("invitations", $invs);
         }
     }

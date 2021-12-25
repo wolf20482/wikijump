@@ -50,7 +50,7 @@ class PageRateWidgetModule extends SmartyModule
             $c->add("page_id", $page->getPageId());
 
             $rates = PageRateVotePeer::instance()->select($c);
-            $votecount = count($rates);
+            $votecount = is_countable($rates) ? count($rates) : 0;
             $runData->contextAdd("votes", $votecount);
         }
 

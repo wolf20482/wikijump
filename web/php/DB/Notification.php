@@ -21,36 +21,20 @@ class Notification extends NotificationBase
      */
     public function getTitle()
     {
+        $title = null;
         $type = $this->getType();
-        switch ($type) {
-            case 'new_private_message':
-                $title = _("New private message");
-                break;
-            case 'new_membership_invitation':
-                $title = _("New membership invitation");
-                break;
-            case 'removed_from_members':
-                $title = _("Membership removal");
-                break;
-            case 'added_to_moderators':
-                $title = _("Added to moderators");
-                break;
-            case 'removed_from_moderators':
-                $title = _("Removed from moderators");
-                break;
-            case 'added_to_administrators':
-                $title = _("Added to administrators");
-                break;
-            case 'removed_from_administrators':
-                $title = _("Removed from administrators");
-                break;
-            case 'membership_application_accepted':
-                $title = _("Membership application accepted");
-                break;
-            case 'membership_application_declined':
-                $title = _("Membership application declined");
-                break;
-        }
+        $title = match ($type) {
+            'new_private_message' => _("New private message"),
+            'new_membership_invitation' => _("New membership invitation"),
+            'removed_from_members' => _("Membership removal"),
+            'added_to_moderators' => _("Added to moderators"),
+            'removed_from_moderators' => _("Removed from moderators"),
+            'added_to_administrators' => _("Added to administrators"),
+            'removed_from_administrators' => _("Removed from administrators"),
+            'membership_application_accepted' => _("Membership application accepted"),
+            'membership_application_declined' => _("Membership application declined"),
+            default => $title,
+        };
 
         return $title;
     }
@@ -75,6 +59,7 @@ class Notification extends NotificationBase
     public function getBody()
     {
 
+        $body = null;
         if (parent::getBody() != "") {
             return parent::getBody();
         }
@@ -123,6 +108,7 @@ class Notification extends NotificationBase
 
     public function getUrls()
     {
+        $urls = null;
         $type = $this->getType();
         $extra = $this->getExtra();
         if ($extra['urls']) {
@@ -131,39 +117,21 @@ class Notification extends NotificationBase
 
         $lang = OZONE::getRunData()->getLanguage();
 
-        switch ($type) {
-            case 'new_private_message':
-                $urls = array(  array(_('read the message'),GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/messages/inboxmessage/'.$extra['message_id']),
-                                array(_('inbox folder'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/messages'));
-                break;
-            case 'new_membership_invitation':
-                $urls = array(array(_('view invitation'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/invitations'));
-                break;
-            case 'removed_from_members':
-                $urls = array(array(_('sites you are a member of'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/memberof'));
-                break;
-            case 'added_to_moderators':
-                $urls = array(array(_('sites you moderate'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/moderatorof'));
-                break;
-            case 'removed_from_moderators':
-                $urls =  array(array(_('sites you moderate'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/moderatorof'));
-                break;
-            case 'added_to_administrators':
-                $urls = array(array(_('sites you administer'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/adminof'));
-                break;
-            case 'removed_from_administrators':
-                $urls = array(array(_('sites you administer'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/adminof'));
-                break;
-            case 'membership_application_accepted':
-                $urls = array(  array(_('your applications'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/applications'),
-                        array(_('sites you are a member of'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/memberof'));
-                break;
-            case 'membership_application_declined':
-                $urls = array(  array(_('your applications'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/applications'),
-                        array(_('sites you are a member of'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/memberof'));
-
-                break;
-        }
+        $urls = match ($type) {
+            'new_private_message' => array(  array(_('read the message'),GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/messages/inboxmessage/'.$extra['message_id']),
+                            array(_('inbox folder'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/messages')),
+            'new_membership_invitation' => array(array(_('view invitation'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/invitations')),
+            'removed_from_members' => array(array(_('sites you are a member of'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/memberof')),
+            'added_to_moderators' => array(array(_('sites you moderate'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/moderatorof')),
+            'removed_from_moderators' => array(array(_('sites you moderate'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/moderatorof')),
+            'added_to_administrators' => array(array(_('sites you administer'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/adminof')),
+            'removed_from_administrators' => array(array(_('sites you administer'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/adminof')),
+            'membership_application_accepted' => array(  array(_('your applications'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/applications'),
+                    array(_('sites you are a member of'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/memberof')),
+            'membership_application_declined' => array(  array(_('your applications'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/applications'),
+                    array(_('sites you are a member of'), GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . '/account:you/start/memberof')),
+            default => $urls,
+        };
         return $urls;
     }
 

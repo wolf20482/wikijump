@@ -24,10 +24,14 @@ use Wikijump\Models\UserMessage;
 class WikiScreen extends Screen
 {
 
-    private $vars = array();
+    private array $vars = array();
 
     public function render($runData)
     {
+        $storeLater = null;
+        $changeTime = null;
+        $aKey = null;
+        $mcKey = null;
         // get site
         $site = $runData->getTemp("site");
         $runData->contextAdd("site", $site);
@@ -255,6 +259,7 @@ class WikiScreen extends Screen
 
     private function handleNotifications($runData)
     {
+        $glang = null;
         // check not earlier than 2 minutes after the previous check
         $user = $runData->getUser();
         if ($user == null) {
@@ -267,7 +272,7 @@ class WikiScreen extends Screen
             return;
         }
 
-        setsecurecookie('lastncheck', time(), time() + 10000000, "/", GlobalProperties::$SESSION_COOKIE_DOMAIN);
+        setsecurecookie('lastncheck', time(), time() + 10_000_000, "/", GlobalProperties::$SESSION_COOKIE_DOMAIN);
         // ok. go get the notifications now.
 
         $c = new Criteria();
@@ -277,11 +282,11 @@ class WikiScreen extends Screen
 
         $nots = NotificationPeer::instance()->select($c);
 
-        if (count($nots) == 0) {
+        if ((is_countable($nots) ? count($nots) : 0) == 0) {
             return;
         }
 
-        if (count($nots)>0) {
+        if ((is_countable($nots) ? count($nots) : 0)>0) {
             $q = "UPDATE notification SET notify_online=FALSE, notify_email=FALSE " .
                     "WHERE user_id='".$user->id."' AND " .
                     "notify_online = TRUE";

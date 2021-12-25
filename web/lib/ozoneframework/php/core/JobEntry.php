@@ -13,11 +13,11 @@ class JobEntry {
 	private $name;
 	private $jobObject;
 
-	private $second = "0";
-	private $minute = "0";
-	private $day = "*";
-	private $month = "*";
-	private $dayOfWeek = "*";
+	private string $second = "0";
+	private string $minute = "0";
+	private string $day = "*";
+	private string $month = "*";
+	private string $dayOfWeek = "*";
 
 	private $secondArray;
 	private $minuteArray;
@@ -238,7 +238,7 @@ class JobEntry {
 			return $startval; // null means "any" here. so the starting value is just fine.
 		}
 
-		$count = count($array);
+		$count = is_countable($array) ? count($array) : 0;
 		for($i = 0; $i<$count; $i++){
 			if($array[$i] >= $startval){
 				return $array[$i];

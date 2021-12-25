@@ -51,7 +51,7 @@ class UserInvitationAction extends SmartyAction
         $message = $pl->getParameterValue("message");
         // check if data is valid
 
-        if (count($addresses) > 20) {
+        if ((is_countable($addresses) ? count($addresses) : 0) > 20) {
             throw new ProcessException(_("You should not send more than 20 invitations at once."));
         }
 

@@ -21,6 +21,7 @@ class TopRatedPagesModule extends CacheableModule2
     public function build($runData)
     {
 
+        $category = null;
         $site = $runData->getTemp("site");
 
         $pl = $runData->getParameterList();

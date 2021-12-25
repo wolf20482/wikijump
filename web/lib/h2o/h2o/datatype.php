@@ -39,7 +39,7 @@ class Evaluator {
     #    [compare] = > | < | == | >= | <=
     #    [binary]    = not | !
     static function exec($args, $context) {
-        $argc = count($args);
+        $argc = is_countable($args) ? count($args) : 0;
         $first = array_shift($args);
         $first = $context->resolve($first);
         switch ($argc) {
@@ -52,9 +52,9 @@ class Evaluator {
                     return !($operant);
                 }
             case 3 :
-                list($op, $right) = $args;
+                [$op, $right] = $args;
                 $right = $context->resolve($right);
-                return call_user_func(array("Evaluator", $op['operator']), $first, $right);
+                return call_user_func(array(Evaluator::class, $op['operator']), $first, $right);
             default:
                 return false;
         }
@@ -93,7 +93,7 @@ class TokenStream  {
     }
 
     function pop() {
-        if (count($this->pushed))
+        if (is_countable($this->pushed) ? count($this->pushed) : 0)
         return array_pop($this->pushed);
         return array_pop($this->stream);
     }
@@ -168,6 +168,6 @@ function symbol($string) {
 }
 
 function strip_regex($regex, $delimiter = '/') {
-    return substr($regex, 1, strrpos($regex, $delimiter)-1);
+    return substr($regex, 1, strrpos($regex, (string) $delimiter)-1);
 }
 ?>

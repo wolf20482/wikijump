@@ -16,7 +16,7 @@ class MemberBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='member';
-        $this->peerName = 'Wikidot\\DB\\MemberPeer';
+        $this->peerName = MemberPeer::class;
         $this->primaryKeyName = 'member_id';
         $this->fieldNames = array( 'member_id' ,  'site_id' ,  'user_id' ,  'date_joined' ,  'allow_newsletter' );
 

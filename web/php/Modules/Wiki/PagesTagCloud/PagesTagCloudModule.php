@@ -254,7 +254,7 @@ class PagesTagCloudModule extends SmartyModule
         }
 
         // Build weights (legacy Wikidot)
-        $minWeight = 10000000;
+        $minWeight = 10_000_000;
         $maxWeight = 0;
 
         foreach ($tag_counts as $tag => $weight) {
@@ -294,6 +294,7 @@ class PagesTagCloudModule extends SmartyModule
 
     protected function _readParameter($name, $fromUrl = false)
     {
+        $val = null;
         $pl = $this->_pl;
         $name = (array) $name;
         foreach ($name as $n) {

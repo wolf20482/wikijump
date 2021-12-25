@@ -42,7 +42,7 @@ function smarty_core_write_compiled_include($params, &$smarty)
         $source = $_match[4];
         if ($this_varname == '_smarty') {
             /* rename $this to $_smarty in the sourcecode */
-            $tokens = token_get_all('<?php ' . $_match[4]);
+            $tokens = PhpToken::tokenize('<?php ' . $_match[4]);
 
             /* remove trailing <?php */
             $open_tag = '';

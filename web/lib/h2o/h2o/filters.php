@@ -9,7 +9,7 @@ class CoreFilters extends FilterCollection {
     }
 
     static function last($value) {
-        return $value[count($value) - 1];
+        return $value[(is_countable($value) ? count($value) : 0) - 1];
     }
 
     static function join($value, $delimiter = ', ') {
@@ -17,11 +17,12 @@ class CoreFilters extends FilterCollection {
     }
 
     static function length($value) {
-        return count($value);
+        return is_countable($value) ? count($value) : 0;
     }
 
     static function urlencode($data) {
-        if (is_array($data)) {
+        $result = null;
+								if (is_array($data)) {
             $result;
             foreach ($data as $name => $value) {
                 $result .= $name.'='.urlencode($value).'&'.$querystring;
@@ -98,7 +99,7 @@ class StringFilters extends FilterCollection {
     static function escapejson($value) {
         // The standard django escapejs converts all non-ascii characters into hex codes.
         // This function encodes the entire data structure, and strings get quotes around them.
-        return json_encode($value);
+        return json_encode($value, JSON_THROW_ON_ERROR);
     }
 
     static function force_escape($value, $attribute = false) {
@@ -138,10 +139,10 @@ class NumberFilters extends FilterCollection {
             return '1 byte';
 
         $units = array(
-            'bytes' => pow(2, 0), 'kB' => pow(2, 10),
-            'BM' => pow(2, 20), 'GB' => pow(2, 30),
-            'TB' => pow(2, 40), 'PB' => pow(2, 50),
-            'EB' => pow(2, 60), 'ZB' => pow(2, 70)
+            'bytes' => 2 ** 0, 'kB' => 2 ** 10,
+            'BM' => 2 ** 20, 'GB' => 2 ** 30,
+            'TB' => 2 ** 40, 'PB' => 2 ** 50,
+            'EB' => 2 ** 60, 'ZB' => 2 ** 70
         );
 
         $lastUnit = 'bytes';
@@ -166,7 +167,7 @@ class NumberFilters extends FilterCollection {
         $currency = strtoupper($currency);
 
         // Is negative
-        if (strpos('-', $amount) !== false) {
+        if (str_contains('-', $amount)) {
             $negative = true;
             $amount = str_replace("-","",$amount);
         }
@@ -188,7 +189,7 @@ class NumberFilters extends FilterCollection {
         if (isset($definition[$currency])) {
             $symbol = $definition[$currency];
             if (is_array($symbol))
-                @list($symbol, $separator, $decimals) = $symbol;
+                @[$symbol, $separator, $decimals] = $symbol;
         } else {
             $symbol = $currency;
         }
@@ -342,9 +343,9 @@ class DatetimeFilters extends FilterCollection {
             }
         }
         if (abs($reldays) < 182)
-            return date('l, F j',$time ? $time : time());
+            return date('l, F j',$time ?: time());
         else
-            return date('l, F j, Y',$time ? $time : time());
+            return date('l, F j, Y',$time ?: time());
     }
 
     static function relative_datetime($time) {
@@ -361,9 +362,9 @@ class DatetimeFilters extends FilterCollection {
 h2o::addFilter(array('md5', 'sha1', 'numberformat'=>'number_format', 'wordwrap', 'trim', 'upper' => 'strtoupper', 'lower' => 'strtolower'));
 
 /* Add filter collections */
-h2o::addFilter(array('CoreFilters', 'StringFilters', 'NumberFilters', 'DatetimeFilters', 'HtmlFilters'));
+h2o::addFilter(array(CoreFilters::class, StringFilters::class, NumberFilters::class, DatetimeFilters::class, HtmlFilters::class));
 
 /* Alias default to set_default */
-h2o::addFilter('default', array('CoreFilters', 'set_default'));
+h2o::addFilter('default', array(CoreFilters::class, 'set_default'));
 
 ?>

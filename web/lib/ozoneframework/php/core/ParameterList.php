@@ -117,18 +117,11 @@ class ParameterList {
 
     private static function convertBool(string $value): ?bool
     {
-        switch ($value) {
-            case 'yes':
-            case 'true':
-            case 't':
-                return true;
-            case 'no':
-            case 'false':
-            case 'f':
-                return false;
-            default:
-                return null;
-        }
+        return match ($value) {
+            'yes', 'true', 't' => true,
+            'no', 'false', 'f' => false,
+            default => null,
+        };
     }
 
     public function containsParameter(string $name): bool
@@ -155,8 +148,6 @@ class ParameterList {
 
     /**
      * Returns type of the passed parameter: POST or GET.
-     * @param string $name
-     * @return string
      */
     public function getParameterType(string $name): string
     {

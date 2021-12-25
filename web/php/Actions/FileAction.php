@@ -65,7 +65,7 @@ class FileAction extends SmartyAction
             try {
                 WDPermissionManager::instance()->hasPagePermission('replace_file', $user, $category, $page);
                 $overwritePermission = true;
-            } catch (Exception $e) {
+            } catch (Exception) {
                 $overwritePermission = false;
             }
             $runData->contextAdd("hasPermission", $overwritePermission);
@@ -75,6 +75,8 @@ class FileAction extends SmartyAction
     public function uploadFileEvent($runData)
     {
 
+        $hasResized = null;
+        $db = null;
         try {
             // the event method will not use OZONE functionality for file processing but
             // rather a low-level approach.
@@ -173,12 +175,12 @@ class FileAction extends SmartyAction
             $c->add("page_id", $pageId);
 
             $conflictFiles = FilePeer::instance()->select($c);
-            if (count($conflictFiles)>0) {
+            if ((is_countable($conflictFiles) ? count($conflictFiles) : 0)>0) {
                 // file already exists!!!
                 try {
                     WDPermissionManager::instance()->hasPagePermission('replace_file', $user, $category, $page);
                     $overwritePermission = true;
-                } catch (Exception $e) {
+                } catch (Exception) {
                     $overwritePermission = false;
                 }
 
@@ -286,7 +288,7 @@ class FileAction extends SmartyAction
 
             $db->commit();
             $runData->contextAdd("status", "ok");
-        } catch (Exception $e) {
+        } catch (Exception) {
             $status = "not_ok";
             $runData->contextAdd("status", $status);
             $runData->contextAdd("message", _("Error uploading file."));
@@ -336,7 +338,7 @@ class FileAction extends SmartyAction
         try {
             WDPermissionManager::instance()->hasPagePermission('replace_file', $user, $category, $page);
             $overwritePermission = true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             $overwritePermission = false;
         }
 
@@ -472,14 +474,14 @@ class FileAction extends SmartyAction
         $categoryTo = $destinationPage->getCategory();
         try {
             WDPermissionManager::instance()->hasPagePermission('attach_file', $user, $categoryTo, $destinationPage);
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new ProcessException(_("No permission to add file to the specifed new page."), "no_destination_permission");
         }
 
         try {
             WDPermissionManager::instance()->hasPagePermission('replace_file', $user, $categoryTo, $destinationPage);
             $overwritePermission = true;
-        } catch (Exception $e) {
+        } catch (Exception) {
             $overwritePermission = false;
         }
 
@@ -676,6 +678,7 @@ class FileAction extends SmartyAction
     private function resizeImages($path, $filename)
     {
 
+        $tmpfile = null;
         // generate image paths
         $medium = escapeshellarg($path.'/medium.jpg');
         $small = escapeshellarg($path.'/small.jpg');

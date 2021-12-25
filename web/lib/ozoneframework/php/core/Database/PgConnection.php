@@ -18,11 +18,11 @@ class PgConnection implements DatabaseConnection{
 	private $user;
 	private $password;
 
-	private $type="pgsql";
+	private string $type="pgsql";
 
 	private $link;
 
-	private $transactionStarted = false;
+	private bool $transactionStarted = false;
 
 	// construction is based on the GlobalProperties object
 	function __construct() {

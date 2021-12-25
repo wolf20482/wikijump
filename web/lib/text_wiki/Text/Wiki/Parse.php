@@ -111,7 +111,7 @@ class Text_Wiki_Parse {
         // to the tokens array. strip off the Text_Wiki_Parse_ portion.
         // text_wiki_parse_
         // 0123456789012345
-        $tmp = substr(get_class($this), 16);
+        $tmp = substr($this::class, 16);
         $this->rule = ucwords(strtolower($tmp));
 
         // override config options for the rule if specified

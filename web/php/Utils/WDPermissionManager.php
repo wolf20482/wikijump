@@ -23,16 +23,16 @@ class WDPermissionManager
 
     private static $instance;
 
-    private $checkIpBlocks = true;
-    private $checkUserBlocks = true;
+    private bool $checkIpBlocks = true;
+    private bool $checkUserBlocks = true;
     /**
      * If set to true each permission check will generate a
      * PermissionException instead of returning false if
      * action is not permitted.
      */
-    private $throwExceptions = true;
+    private bool $throwExceptions = true;
 
-    private static $pageActions = array(
+    private static array $pageActions = array(
             'view' => 'v',
             'edit' => 'e',
             'create' => 'c',
@@ -46,7 +46,7 @@ class WDPermissionManager
             'options' => 'o'
         );
 
-    private static $pageActionsDesc = array(
+    private static array $pageActionsDesc = array(
             'view' => 'view this page',
             'edit' => 'edit this page',
             'create' => 'create a new page in this category',
@@ -60,7 +60,7 @@ class WDPermissionManager
             'options' => 'what????'
         );
 
-    private static $forumActions = array(
+    private static array $forumActions = array(
             'new_thread' => 't',
             'new_post' => 'p',
             'edit_post' => 'e',
@@ -68,7 +68,7 @@ class WDPermissionManager
             'split' => 's',
             'moderate_forum' => 'x'
         );
-    private static $forumActionsDesc = array(
+    private static array $forumActionsDesc = array(
             'new_thread' => 'start new discussion thread',
             'new_post' => 'add new post in this thread',
             'edit_post' => 'edit a post in this thread',
@@ -77,14 +77,14 @@ class WDPermissionManager
             'moderate_forum' => 'perform this action'
         );
 
-    private static $userClasses = array(
+    private static array $userClasses = array(
         'anonymous' => 'a',
         'registered' => 'r',
         'member' => 'm',
         'owner' => 'o'
     );
 
-    private static $userClassesDesc = array(
+    private static array $userClassesDesc = array(
         'anonymous' => 'anonymous users',
         'registered' => 'registered users',
         'member' => 'members of this site',
@@ -134,6 +134,7 @@ class WDPermissionManager
 
     public function hasPermission($action, $user, $site = null)
     {
+        $message = null;
         if ($user->id === 1) {
             return true;
         }
@@ -235,7 +236,7 @@ class WDPermissionManager
         if ($this->checkIpBlocks) {
             $ips = Ozone::getRunData()->createIpString();
             $blocks = $this->checkIpBlocked($ips, $site);
-            if (count($blocks)>0) {
+            if ((is_countable($blocks) ? count($blocks) : 0)>0) {
                 if ($this->throwExceptions) {
                     throw new WDPermissionException(_("Sorry, your IP address is blocked from participating in and modifying this site."));
                 } else {
@@ -252,7 +253,7 @@ class WDPermissionManager
                 $c->add("site_id", $category->getSiteId());
                 $c->add("user_id", $user->id);
                 $rel = ModeratorPeer::instance()->selectOne($c);
-                if ($rel && strpos($rel->getPermissions(), 'p') !== false) {
+                if ($rel && str_contains($rel->getPermissions(), 'p')) {
                     return true;
                 }
 
@@ -372,7 +373,7 @@ class WDPermissionManager
         $c->add("site_id", $category->getSiteId());
         $c->add("user_id", $user->id);
         $rel = ModeratorPeer::instance()->selectOne($c);
-        if ($rel && strpos($rel->getPermissions(), 'p') !== false) {
+        if ($rel && str_contains($rel->getPermissions(), 'p')) {
             return true;
         }
 
@@ -402,7 +403,7 @@ class WDPermissionManager
         if ($this->checkIpBlocks) {
             $ips = Ozone::getRunData()->createIpString();
             $blocks = $this->checkIpBlocked($ips, $site);
-            if (count($blocks)>0) {
+            if ((is_countable($blocks) ? count($blocks) : 0)>0) {
                 if ($this->throwExceptions) {
                     throw new WDPermissionException(_("Sorry, your IP address is blocked from participating in and modifying this site."));
                 } else {
@@ -493,7 +494,7 @@ class WDPermissionManager
 
         $uc = self::$userClasses['owner'];
         if (($post || $thread) && $this->permissionLookup($ac, $uc, $ps)) {
-            $o = $post ? $post:$thread;
+            $o = $post ?: $thread;
 
             if ($o && $o->getUserId() && $user->id == $o->getUserId()) {
                 // check blocked users
@@ -523,7 +524,7 @@ class WDPermissionManager
         $c->add("site_id", $category->getSiteId());
         $c->add("user_id", $user->id);
         $rel = ModeratorPeer::instance()->selectOne($c);
-        if ($rel && strpos($rel->getPermissions(), 'f') !== false) {
+        if ($rel && str_contains($rel->getPermissions(), 'f')) {
             return true;
         }
 
@@ -543,9 +544,6 @@ class WDPermissionManager
 
     /**
      * Check if $user can send a private message to $toUser.
-     * @param User $user
-     * @param User $toUser
-     * @return Response
      */
     public function hasPmPermission(User $user, User $toUser): Response
     {
@@ -683,6 +681,8 @@ class WDPermissionManager
 
     private function generateMessage($ac, $uc, $permString, $mode = 'page', $extraUserDesc = null)
     {
+        $actionCode = null;
+        $actionString = null;
         if ($mode == 'page') {
             $actionString = self::$pageActionsDesc[$ac];
             $actionCode =  self::$pageActions[$ac];

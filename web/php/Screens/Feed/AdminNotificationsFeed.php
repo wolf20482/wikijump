@@ -45,6 +45,7 @@ class AdminNotificationsFeed extends FeedScreen
     public function build($runData)
     {
 
+        $channel = [];
         $site = $runData->getTemp("site");
 
         // now just get notifications for the site...
@@ -66,15 +67,10 @@ class AdminNotificationsFeed extends FeedScreen
             $item = array();
 
             $item['title'] = $not->getTitle();
-            switch ($not->getType()) {
-                case "NEW_MEMBER_APPLICATION":
-                    $item['link'] = GlobalProperties::$HTTP_SCHEMA . "://" . $site->getDomain()."/admin:manage/start/ma";
-                    break;
-
-                default:
-                    $item['link'] = GlobalProperties::$HTTP_SCHEMA . "://" . $site->getDomain()."/admin:manage/start/notifications"."#notification-".$not->getNotificationId();
-                    ;
-            }
+            $item['link'] = match ($not->getType()) {
+                "NEW_MEMBER_APPLICATION" => GlobalProperties::$HTTP_SCHEMA . "://" . $site->getDomain()."/admin:manage/start/ma",
+                default => GlobalProperties::$HTTP_SCHEMA . "://" . $site->getDomain()."/admin:manage/start/notifications"."#notification-".$not->getNotificationId(),
+            };
 
             $body = $not->getBody();
 

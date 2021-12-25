@@ -129,7 +129,7 @@ class POP3
    * @param string $username
    * @param string $password
    */
-  function Authorise ($host, $port = false, $tval = false, $username, $password, $debug_level = 0)
+  function Authorise ($host, $username, $password, $port = false, $tval = false, $debug_level = 0)
   {
     $this->host = $host;
 
@@ -249,7 +249,7 @@ class POP3
       else
       {
         //  Does not work on Windows
-        if (substr(PHP_OS, 0, 3) !== 'WIN')
+        if (!str_starts_with(PHP_OS, 'WIN'))
         {
           socket_set_timeout($this->pop_conn, $tval, 0);
         }
@@ -377,7 +377,7 @@ class POP3
      */
     function checkResponse ($string)
     {
-      if (substr($string, 0, 3) !== '+OK')
+      if (!str_starts_with($string, '+OK'))
       {
         $this->error = array(
           'error' => "Server reported an error: $string",

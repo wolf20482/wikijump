@@ -4,13 +4,13 @@ namespace Wikidot\Utils;
 
 class LatexRenderer
 {
-    private $latexPath = "/usr/bin/latex";
-    private $dvipsPath = "/usr/bin/dvips";
-    private $convertPath = "/usr/bin/convert";
-    private $tmpDir = "/tmp/latex-renderer";
-    private $outputDir = "/usr/home/barik/public_html/gehennom/lj/cache";
+    private string $latexPath = "/usr/bin/latex";
+    private string $dvipsPath = "/usr/bin/dvips";
+    private string $convertPath = "/usr/bin/convert";
+    private string $tmpDir = "/tmp/latex-renderer";
+    private string $outputDir = "/usr/home/barik/public_html/gehennom/lj/cache";
 
-    private $density = 130;
+    private int $density = 130;
 
     public function wrap($thunk)
     {

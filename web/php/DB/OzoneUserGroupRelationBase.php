@@ -18,7 +18,7 @@ class OzoneUserGroupRelationBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='ozone_user_group_relation';
-        $this->peerName = 'Wikidot\\DB\\OzoneUserGroupRelationPeer';
+        $this->peerName = OzoneUserGroupRelationPeer::class;
         $this->primaryKeyName = 'user_group_id';
         $this->fieldNames = array( 'user_group_id' ,  'user_id' ,  'group_id' );
 
@@ -65,7 +65,7 @@ class OzoneUserGroupRelationBase extends BaseDBObject
                 }
             }
         }
-                $foreignPeerClassName = 'Wikidot\\DB\\OzoneGroupPeer';
+                $foreignPeerClassName = OzoneGroupPeer::class;
                 $fpeer = new $foreignPeerClassName();
 
                 $criteria = new Criteria();

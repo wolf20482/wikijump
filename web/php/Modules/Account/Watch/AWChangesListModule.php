@@ -46,7 +46,7 @@ class AWChangesListModule extends AccountBaseModule
 
         $revisions = PageRevisionPeer::instance()->select($c);
 
-        $counted = count($revisions);
+        $counted = is_countable($revisions) ? count($revisions) : 0;
         $pagerData = array();
         $pagerData['currentPage'] = $pageNumber;
         if ($counted >$perPage*2) {

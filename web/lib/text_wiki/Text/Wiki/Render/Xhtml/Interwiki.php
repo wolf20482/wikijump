@@ -65,7 +65,7 @@ class Text_Wiki_Render_Xhtml_Interwiki extends Text_Wiki_Render {
 
         // old form where page is at end,
         // or new form with %s placeholder for sprintf()?
-        if (strpos($href, '%s') === false) {
+        if (!str_contains($href, '%s')) {
             // use the old form
             $href = $href . $page;
         } else {

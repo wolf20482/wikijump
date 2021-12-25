@@ -44,7 +44,7 @@ class PageTreeModule extends SmartyModule
         // select next level of children
         $ch1 = $children;
         $d = 0;
-        while ($ch1 != null && count($ch1)>0 && (!$depth || $d<$depth)) {
+        while ($ch1 != null && (is_countable($ch1) ? count($ch1) : 0)>0 && (!$depth || $d<$depth)) {
             $q = "SELECT * FROM page WHERE parent_page_id IN (";
             $tch = array();
             foreach ($ch1 as $ch) {

@@ -93,7 +93,7 @@ class ForumRecentPostsListModule extends SmartyModule
         $c->setLimit($count, $offset);
         $posts = ForumPostPeer::instance()->select($c);
 
-        $counted = count($posts);
+        $counted = is_countable($posts) ? count($posts) : 0;
         $pagerData = array();
         $pagerData['currentPage'] = $pageNumber;
         if ($counted >$perPage*2) {

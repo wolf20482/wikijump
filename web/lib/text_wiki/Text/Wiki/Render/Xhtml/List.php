@@ -50,6 +50,9 @@ class Text_Wiki_Render_Xhtml_List extends Text_Wiki_Render {
 
     function token($options)
     {
+        $level = null;
+        $type = null;
+        $count = null;
         // make nice variables (type, level, count)
         extract($options);
 

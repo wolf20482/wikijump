@@ -59,6 +59,7 @@ class PagesListByTagModule extends SmartyModule
 
     public function build($runData)
     {
+        $category = null;
         $pl = $runData->getParameterList();
 
         $site = $runData->getTemp("site");
@@ -93,7 +94,7 @@ class PagesListByTagModule extends SmartyModule
 
         $runData->contextAdd("tag", $tag);
         $runData->contextAdd("pages", $pages);
-        $runData->contextAdd("pageCount", count($pages));
+        $runData->contextAdd("pageCount", is_countable($pages) ? count($pages) : 0);
 
         $runData->contextAdd("pageUnixName", $runData->getTemp("page")->getUnixName());
     }

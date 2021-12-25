@@ -35,6 +35,7 @@ class MagpieFeed
 
     public static function getUnixTimestamp($item)
     {
+        $date = null;
         $rss_2_date = $item['pubdate'];
         $rss_1_date = $item['dc']['date'];
         $atom_date  = $item['issued'];

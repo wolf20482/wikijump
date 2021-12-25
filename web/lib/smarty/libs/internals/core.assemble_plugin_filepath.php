@@ -4,15 +4,13 @@
  * @package Smarty
  * @subpackage plugins
  */
-
 /**
  * assemble filepath of requested plugin
  *
  * @param string $type
  * @param string $name
- * @return string|false
  */
-function smarty_core_assemble_plugin_filepath($params, &$smarty)
+function smarty_core_assemble_plugin_filepath($params, &$smarty): string|false
 {
     $_plugin_filename = $params['type'] . '.' . $params['name'] . '.php';
     if (isset($smarty->_filepaths_cache[$_plugin_filename])) {

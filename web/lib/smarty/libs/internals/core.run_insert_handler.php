@@ -14,6 +14,7 @@
 function smarty_core_run_insert_handler($params, &$smarty)
 {
 
+    $_debug_start_time = null;
     require_once(SMARTY_CORE_DIR . 'core.get_microtime.php');
     if ($smarty->debugging) {
         $_params = array();

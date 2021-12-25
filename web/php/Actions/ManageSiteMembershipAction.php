@@ -138,7 +138,7 @@ class ManageSiteMembershipAction extends SmartyAction
 
         try {
             WDPermissionManager::instance()->hasPermission("become_member", $user, $site);
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new ProcessException(_("It seems that this user is on the blacklist"));
         }
 
@@ -147,17 +147,17 @@ class ManageSiteMembershipAction extends SmartyAction
         $c->add("site_id", $site->getSiteId());
 
         $mem = MemberPeer::instance()->select($c);
-        if (count($mem) > 0) {
+        if ((is_countable($mem) ? count($mem) : 0) > 0) {
             throw new ProcessException(_("This user already is a member of this site."), "already_member");
         }
         $invs = MemberInvitationPeer::instance()->select($c);
-        if (count($invs) > 0) {
+        if ((is_countable($invs) ? count($invs) : 0) > 0) {
             throw new ProcessException(_("This user has been already invited to this site."), "already_invited");
         }
 
         // check if user WISHES to receive invitations
         if($user->get('receive_invitations') === false) {
-            throw new ProcessException(_("This user does not wish to receive any invitations.", "wishes_not"));
+            throw new ProcessException(_("This user does not wish to receive any invitations."));
         }
 
         $db = Database::connection();
@@ -580,7 +580,7 @@ class ManageSiteMembershipAction extends SmartyAction
         $message = $pl->getParameterValue("message");
         // check if data is valid
 
-        if (count($addresses) > 200) {
+        if ((is_countable($addresses) ? count($addresses) : 0) > 200) {
             throw new ProcessException(_("You should not send more than 200 invitations at once."));
         }
 
@@ -812,14 +812,14 @@ class ManageSiteMembershipAction extends SmartyAction
         // look for name and email
 
         $namePos = 0;
-        for ($i=0; $i<count($header); $i++) {
+        for ($i=0; $i<(is_countable($header) ? count($header) : 0); $i++) {
             if (preg_match("/name/i", $header[$i])) {
                 $namePos = $i;
                 break;
             }
         }
         $emailPos = 0;
-        for ($i=0; $i<count($header); $i++) {
+        for ($i=0; $i<(is_countable($header) ? count($header) : 0); $i++) {
             if (preg_match("/e\-?mail/i", $header[$i])) {
                 $emailPos = $i;
                 break;

@@ -138,7 +138,7 @@ class Text_Wiki_Parse_Tableadv extends Text_Wiki_Parse {
         }
 
         // newlines if no paragraps inside
-        if (strpos($content, "\n\n") === false) {
+        if (!str_contains($content, "\n\n")) {
             $content = trim($content);
         } else {
             $content = "\n\n" . $content . "\n\n";

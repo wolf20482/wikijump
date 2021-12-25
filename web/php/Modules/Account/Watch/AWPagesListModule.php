@@ -33,6 +33,6 @@ class AWPagesListModule extends AccountBaseModule
 
         $runData->contextAdd("pages", $pages);
 
-        $runData->contextAdd("pagesCount", count($pages));
+        $runData->contextAdd("pagesCount", is_countable($pages) ? count($pages) : 0);
     }
 }

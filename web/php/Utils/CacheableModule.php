@@ -46,7 +46,7 @@ abstract class CacheableModule extends SmartyModule
             // cacheable
             $parmSubKey = md5(serialize($pl->asArray()));
 
-            $mcKey = 'module..'.$site->getSiteId().'..'.get_class($this).'..'.$parmSubKey;
+            $mcKey = 'module..'.$site->getSiteId().'..'.$this::class.'..'.$parmSubKey;
 
             // get the content
             $out = Cache::get($mcKey);

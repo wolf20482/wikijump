@@ -1,4 +1,6 @@
 <?php
+
+use Wikidot\Form\Field;
 // vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4:
 /**
  * Image rule end renderer for Xhtml
@@ -13,7 +15,6 @@
  * @version    $Id$
  * @link       http://pear.php.net/package/Text_Wiki
  */
-
 /**
  * This class inserts an image in XHTML.
  *
@@ -49,7 +50,7 @@ class Text_Wiki_Render_Xhtml_Form extends Text_Wiki_Render {
             return '</table>';
         }
 
-        $field = Wikidot\Form\Field::field($options['field']);
+        $field = Field::field($options['field']);
         $h_label = htmlspecialchars($options['field']['label']);
         $h_value = $field->renderView();
 

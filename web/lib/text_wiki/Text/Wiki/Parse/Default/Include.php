@@ -125,7 +125,7 @@ class Text_Wiki_Parse_Include extends Text_Wiki_Parse {
     			if($subs){
     				$subsArray = explode('|', $subs);
     				foreach($subsArray as $sub){
-    					if(strpos($sub, '=') !== false){
+    					if(str_contains($sub, '=')){
     						$pos = strpos($sub,'=');
     						$var = trim(substr($sub, 0, $pos));
     						$value = trim(substr($sub, $pos+1));

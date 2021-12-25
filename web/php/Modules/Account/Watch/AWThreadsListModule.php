@@ -33,6 +33,6 @@ class AWThreadsListModule extends AccountBaseModule
 
         $runData->contextAdd("threads", $threads);
 
-        $runData->contextAdd("threadsCount", count($threads));
+        $runData->contextAdd("threadsCount", is_countable($threads) ? count($threads) : 0);
     }
 }

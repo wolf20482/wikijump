@@ -13,7 +13,7 @@ class PageBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='page';
-        $this->peerName = 'Wikidot\\DB\\PagePeer';
+        $this->peerName = PagePeer::class;
         $this->primaryKeyName = 'page_id';
         $this->fieldNames = array( 'page_id' ,  'site_id' ,  'category_id' ,  'parent_page_id' ,  'revision_id' ,  'metadata_id' ,  'revision_number' ,  'title' ,  'unix_name' ,  'date_created' ,  'date_last_edited' ,  'last_edit_user_id' ,  'last_edit_user_string' ,  'thread_id' ,  'owner_user_id' ,  'blocked' ,  'rate' , 'tags' );
     }
@@ -32,7 +32,7 @@ class PageBase extends BaseDBObject
                 }
             }
         }
-                $foreignPeerClassName = 'Wikidot\\DB\\SitePeer';
+                $foreignPeerClassName = SitePeer::class;
                 $fpeer = new $foreignPeerClassName();
 
                 $criteria = new Criteria();
@@ -239,11 +239,11 @@ class PageBase extends BaseDBObject
 
     public function getTagsArray(): array
     {
-        return json_decode($this->getFieldValue('tags'));
+        return json_decode($this->getFieldValue('tags'), null, 512, JSON_THROW_ON_ERROR);
     }
 
     public function setTagsArray(array $tags): void
     {
-        $this->setFieldValue('tags', json_encode($tags));
+        $this->setFieldValue('tags', json_encode($tags, JSON_THROW_ON_ERROR));
     }
 }

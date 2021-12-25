@@ -17,7 +17,7 @@ class UserBlockPeerBase extends BaseDBPeer
     protected function internalInit()
     {
         $this->tableName='user_block';
-        $this->objectName='Wikidot\\DB\\UserBlock';
+        $this->objectName=UserBlock::class;
         $this->primaryKeyName = 'block_id';
         $this->fieldNames = array( 'block_id' ,  'site_id' ,  'user_id' ,  'reason' ,  'date_blocked' );
         $this->fieldTypes = array( 'block_id' => 'serial',  'site_id' => 'int',  'user_id' => 'int',  'reason' => 'text',  'date_blocked' => 'timestamp');
@@ -27,7 +27,7 @@ class UserBlockPeerBase extends BaseDBPeer
     public static function instance()
     {
         if (self::$peerInstance == null) {
-            $className = 'Wikidot\\DB\\UserBlockPeer';
+            $className = UserBlockPeer::class;
             self::$peerInstance = new $className();
         }
         return self::$peerInstance;

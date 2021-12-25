@@ -50,7 +50,9 @@ class Text_Wiki_Render_Xhtml_Url extends Text_Wiki_Render {
 
     function token($options)
     {
-        // create local variables from the options array (text,
+        $href = [];
+								$type = null;
+								// create local variables from the options array (text,
         // href, type)
         extract($options);
 

@@ -126,7 +126,7 @@ class ForumViewCategoryModule extends SmartyModule
         $runData->contextAdd("pagerData", $pagerData);
         $runData->contextAdd("category", $category);
         $runData->contextAdd("threads", $threads);
-        $runData->contextAdd("threadsCount", count($threads));
+        $runData->contextAdd("threadsCount", is_countable($threads) ? count($threads) : 0);
         $runData->contextAdd("sortStart", $sort=="start");
     }
 

@@ -6,8 +6,8 @@ use Exception;
 
 class CryptUtils
 {
-    private static $keyFile = 'conf/ssl/key.pem';
-    private static $publicFile = 'conf/ssl/public.pem';
+    private static string $keyFile = 'conf/ssl/key.pem';
+    private static string $publicFile = 'conf/ssl/public.pem';
 
     public static function generateSeed($length = 10)
     {
@@ -16,7 +16,7 @@ class CryptUtils
         $charMax = 90;
         $out = '';
         for ($i = 0; $i<$length; $i++) {
-            $out .= $vals[rand(0, 35)];
+            $out .= $vals[random_int(0, 35)];
         }
         return $out;
     }

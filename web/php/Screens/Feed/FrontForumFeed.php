@@ -20,6 +20,7 @@ class FrontForumFeed extends FeedScreen
 
     public function render($runData)
     {
+        $changeTimestamp = null;
         $site = $runData->getTemp('site');
         $pl = $runData->getParameterList();
 
@@ -102,6 +103,7 @@ class FrontForumFeed extends FeedScreen
     public function build($runData)
     {
 
+        $channel = [];
         $site = $runData->getTemp('site');
 
         $pl = $runData->getParameterList();

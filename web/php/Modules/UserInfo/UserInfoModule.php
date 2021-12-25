@@ -19,6 +19,7 @@ class UserInfoModule extends SmartyLocalizedModule
     public function build($runData)
     {
 
+        $userUnixName = null;
         // a hack to get unix user name
         $qs =  $_SERVER['QUERY_STRING'];
         $splited = explode("/", $qs);

@@ -13,7 +13,7 @@ class FormTool {
 
 	// should become true after a form is substracted from the http request
 
-	private $formStorage = array();
+	private array $formStorage = array();
 
 	public function getForm($name, $formKey=null){
 		if($formKey == null) {$formKey = "_0";} // set default formKey
@@ -35,7 +35,7 @@ class FormTool {
 
 	public function processHttpRequest($runData) {
 		$parameters = $runData->getParameterList()->asArray();
-		if($parameters['use_formtool'] == yes){
+		if($parameters['use_formtool'] == \YES){
 			$formName = $parameters['formname'];
 			$formKey = $parameters['formkey'];
 			$form = $this->getForm($formName, $formKey);

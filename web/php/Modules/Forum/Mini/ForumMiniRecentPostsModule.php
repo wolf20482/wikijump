@@ -18,6 +18,7 @@ class ForumMiniRecentPostsModule extends CacheableModule
     public function build($runData)
     {
 
+        $category = null;
         $site = $runData->getTemp("site");
 
         $pl = $runData->getParameterList();

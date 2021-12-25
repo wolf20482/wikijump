@@ -10,6 +10,7 @@ abstract class SmartyLocalizedModule extends SmartyModule
     public function render($runData)
     {
 
+        $glang = null;
         $uu = $runData->getUser();
         if ($uu) {
             $lang = $uu->language;

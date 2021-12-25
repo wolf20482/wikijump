@@ -13,6 +13,7 @@ namespace Ozone\Framework;
 class ModuleHelpers {
 
 	public static function findModuleClass($template){
+		$classFiles = [];
 		$classFilename = PathManager :: moduleClass($template);
 
 		if (file_exists($classFilename)) {

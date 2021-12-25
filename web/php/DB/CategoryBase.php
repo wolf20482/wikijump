@@ -16,7 +16,7 @@ class CategoryBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='category';
-        $this->peerName = 'Wikidot\\DB\\CategoryPeer';
+        $this->peerName = CategoryPeer::class;
         $this->primaryKeyName = 'category_id';
         $this->fieldNames = array( 'category_id' ,  'site_id' ,  'name' ,  'theme_default' ,  'theme_id' ,  'theme_external_url' ,  'permissions_default' ,  'permissions' ,  'license_inherits' ,  'license_id' ,  'nav_default' ,  'top_bar_page_name' ,  'side_bar_page_name' ,  'template_id' ,  'per_page_discussion' ,  'per_page_discussion_default' ,  'rating' ,  'category_template_id' ,  'autonumerate' ,  'page_title_template' );
     }

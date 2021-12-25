@@ -47,7 +47,7 @@ class Text_Wiki_Parse_Bibitem extends Text_Wiki_Parse {
         $content = $matches[2];
         $content = trim(str_replace("\n", " ", $content));
         $this->wiki->vars['bibitems'][$label] = $content;
-        $id = count($this->wiki->vars['bibitemIds']) + 1;
+        $id = (is_countable($this->wiki->vars['bibitemIds']) ? count($this->wiki->vars['bibitemIds']) : 0) + 1;
         $this->wiki->vars['bibitemIds'][$label] = $id;
         return $this->wiki->addToken($this->rule,
                 array(

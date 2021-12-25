@@ -13,11 +13,10 @@ class GlobalVariablesService extends TemplateService {
 
 	protected $serviceName = "globals";
 
-	private $storage = array();
-	private $runData;
+	private array $storage = array();
 
-	public function __construct($runData){
-		$this->runData = $runData;
+	public function __construct(private $runData)
+	{
 	}
 
 	public function set($key, $value){

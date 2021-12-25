@@ -18,7 +18,7 @@ class AnonymousInfoWinModule extends SmartyModule
             throw new ProcessException("Bad data");
         }
 
-        list($ip, $proxy) = explode("|", $userString);
+        [$ip, $proxy] = explode("|", $userString);
 
         $runData->contextAdd("ip", $ip);
         $runData->contextAdd("proxy", $proxy);

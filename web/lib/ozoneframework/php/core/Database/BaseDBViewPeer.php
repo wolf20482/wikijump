@@ -36,7 +36,7 @@ abstract class BaseDBViewPeer {
 		$c = clone($criteria);
 		$c->setLimit(1);
 		$rarray = $this->selectByCriteria($c);
-		if(count($rarray) == 1){
+		if((is_countable($rarray) ? count($rarray) : 0) == 1){
 			return current($rarray);
 		} else {
 			return null;
@@ -72,7 +72,7 @@ abstract class BaseDBViewPeer {
 	 */
 	public  function selectOneByExplicitQuery($criteriaQuery=''){
 		$rarray = $this->selectByExplicitQuery($criteriaQuery . " LIMIT 1");
-		if(count($rarray) == 1){
+		if((is_countable($rarray) ? count($rarray) : 0) == 1){
 			return current($rarray);
 		} else {
 			return null;
@@ -94,7 +94,7 @@ abstract class BaseDBViewPeer {
 	 */
 	public  function selectOne($criteria=null){
 		$rarray=  $this->selectByCriteria($criteria);
-		if(count($rarray) == 1){
+		if((is_countable($rarray) ? count($rarray) : 0) == 1){
 			return current($rarray);
 		} else {
 			return null;
@@ -117,6 +117,7 @@ abstract class BaseDBViewPeer {
 	}
 
 	public  function selectCustom($query){
+		$objectName = null;
 		$my = Database::connection();
 		$result = $my->query($query);
 		return $result->asObjects($objectName);

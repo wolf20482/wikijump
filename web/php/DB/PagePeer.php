@@ -27,7 +27,7 @@ class PagePeer extends PagePeerBase
             ->where('page_id', $page_id)
             ->value('tags');
 
-        $fetched_tags = json_decode($fetched_tags); // Decodes the tags.
+        $fetched_tags = json_decode($fetched_tags, null, 512, JSON_THROW_ON_ERROR); // Decodes the tags.
         return $fetched_tags === null ? new Set() : new Set($fetched_tags); // Convert to set, and if null, return empty set.
     }
 

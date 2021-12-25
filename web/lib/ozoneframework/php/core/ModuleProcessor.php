@@ -16,18 +16,17 @@ use Wikijump\Helpers\LegacyTools;
  */
 class ModuleProcessor {
 
-	private $runData;
-	private $javascriptInline = false;
-	private $cssInline = false;
-	private $cssInclude = array();
+	private bool $javascriptInline = false;
+	private bool $cssInline = false;
+	private array $cssInclude = array();
 	private $modulesToProcessPage = null;
 
-	private $_moduleChain = array();
+	private array $_moduleChain = array();
 
-	private $level = 0;
+	private int $level = 0;
 
-	public function __construct($runData){
-		$this->runData = $runData;
+	public function __construct(private $runData)
+	{
 	}
 
 	public function setJavascriptInline($val){
@@ -111,6 +110,7 @@ class ModuleProcessor {
 
 	public function renderModule($templateName, $parameters=null){
 
+		$out = null;
 		$ttt = ModuleHelpers::findModuleClass($templateName);
 		$classPath = $ttt[1];
 		require_once($classPath);

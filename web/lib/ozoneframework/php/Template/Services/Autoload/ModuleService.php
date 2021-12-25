@@ -4,24 +4,25 @@ namespace Ozone\Framework\Template\Services\Autoload;
 
 
 
+use Stringable;
 use Ozone\Framework\TemplateService;
 
 /**
  * Module service.
  *
  */
-class ModuleService extends TemplateService {
+class ModuleService extends TemplateService implements Stringable {
 
 	protected $serviceName = "module";
 
 	private $templateName;
-	private $runData;
 
-	public function __construct($runData){
-		$this->runData = $runData;
+	public function __construct(private $runData)
+	{
 	}
 
 	public function render($templateName, $parameters=null){
+		$parmstring = null;
 		$this->templateName = $templateName;
 		if($parameters!==null){
 			$parmstring = " ".urlencode($parameters)." ";

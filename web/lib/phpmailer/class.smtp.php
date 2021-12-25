@@ -339,7 +339,7 @@ class SMTP
 
     $max_line_length = 998; # used below; set here for ease in change
 
-    while(list(,$line) = @each($lines)) {
+    while([, $line] = @each($lines)) {
       $lines_out = null;
       if($line == "" && $in_headers) {
         $in_headers = false;
@@ -366,7 +366,7 @@ class SMTP
       $lines_out[] = $line;
 
       # now send the lines to the server
-      while(list(,$line_out) = @each($lines_out)) {
+      while([, $line_out] = @each($lines_out)) {
         if(strlen($line_out) > 0)
         {
           if(substr($line_out, 0, 1) == ".") {
@@ -419,6 +419,7 @@ class SMTP
    * @return string array
    */
   function Expand($name) {
+    $list = [];
     $this->error = null; # so no confusion is caused
 
     if(!$this->connected()) {
@@ -450,7 +451,7 @@ class SMTP
 
     # parse the reply and place in our array to return to user
     $entries = explode($this->CRLF,$rply);
-    while(list(,$l) = @each($entries)) {
+    while([, $l] = @each($entries)) {
       $list[] = substr($l,4);
     }
 

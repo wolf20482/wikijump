@@ -10,7 +10,7 @@ namespace Ozone\Framework;
  */
 class FileUpload {
 
-	private $multiple = false;
+	private bool $multiple = false;
 
 	public function __construct(){
 

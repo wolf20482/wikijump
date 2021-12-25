@@ -83,20 +83,12 @@ function smarty_block_t(array $params, ?string $text, &$smarty)
 		$text = smarty_gettext_strarg($text, $params);
 	}
 
-	if ($escape === 'html') { // html escape, default
-		$text = nl2br(htmlspecialchars($text));
+	if ($escape === 'html') {
 	} elseif ($escape !== null) {
-		switch ($escape) {
-			case 'javascript':
-			case 'js':
-				// javascript escape
-				$text = str_replace('\'', '\\\'', stripslashes($text));
-				break;
-			case 'url':
-				// url escape
-				$text = urlencode($text);
-				break;
-		}
+		$text = match ($escape) {
+			'javascript', 'js' => str_replace('\'', '\\\'', stripslashes($text)),
+			'url' => urlencode($text),
+		};
 	}
 
 	return $text;

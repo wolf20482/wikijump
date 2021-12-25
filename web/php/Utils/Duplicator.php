@@ -23,7 +23,7 @@ class Duplicator
 {
 
     private $owner;
-    private $excludedCategories = array();
+    private array $excludedCategories = array();
 
     private $pageMap;
 

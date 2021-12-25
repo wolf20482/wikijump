@@ -169,8 +169,6 @@ final class Outdater
 
     /**
      * This is the place where pages are compiled!
-     *
-     * @param Page $page
      */
     private function recompilePage(Page $page): void
     {
@@ -432,7 +430,7 @@ final class Outdater
     private function recompiledIncludedPagesBatch($connections): void
     {
         foreach ($connections as $connection) {
-            $page = PagePeer::getInstance()->selectByPrimaryKey($connection->from_page_id);
+            $page = (new PagePeer())->getInstance()->selectByPrimaryKey($connection->from_page_id);
             $outdater = new Outdater($this->recurrence_level);
             $outdater->pageEvent('source_changed', $page);
         }
@@ -449,7 +447,7 @@ final class Outdater
 
         $pages = PagePeer::instance()->select($c);
 
-        while ($pages !== null && count($pages)>0 && $rec<10) {
+        while ($pages !== null && (is_countable($pages) ? count($pages) : 0)>0 && $rec<10) {
             $p2 = array();
             foreach ($pages as $p) {
                 $this->outdatePageCache($p);

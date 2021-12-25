@@ -5,6 +5,7 @@ use Ozone\Framework\Ozone;
 function smarty_function_pager($params, &$smarty)
 {
 
+    $pages = null;
     $lang = Ozone::$runData->getLanguage();
     if ($lang == 'en') {
         $li18 = array(

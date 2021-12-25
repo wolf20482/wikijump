@@ -49,17 +49,17 @@ function smarty_block_textformat($params, $content, &$smarty)
             case 'indent_char':
             case 'wrap_char':
             case 'assign':
-                $$_key = (string)$_val;
+                ${$_key} = (string)$_val;
                 break;
 
             case 'indent':
             case 'indent_first':
             case 'wrap':
-                $$_key = (int)$_val;
+                ${$_key} = (int)$_val;
                 break;
 
             case 'wrap_cut':
-                $$_key = (bool)$_val;
+                ${$_key} = (bool)$_val;
                 break;
 
             default:
@@ -75,7 +75,7 @@ function smarty_block_textformat($params, $content, &$smarty)
     $_paragraphs = preg_split('![\r\n][\r\n]!',$content);
     $_output = '';
 
-    for($_x = 0, $_y = count($_paragraphs); $_x < $_y; $_x++) {
+    for($_x = 0, $_y = is_countable($_paragraphs) ? count($_paragraphs) : 0; $_x < $_y; $_x++) {
         if ($_paragraphs[$_x] == '') {
             continue;
         }

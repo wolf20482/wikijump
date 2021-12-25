@@ -22,6 +22,10 @@
  */
 function smarty_function_fetch($params, &$smarty)
 {
+    $proxy_host = null;
+    $proxy_port = null;
+    $user = null;
+    $pass = null;
     if (empty($params['file'])) {
         $smarty->_trigger_fatal_error("[plugin] parameter 'file' cannot be empty");
         return;

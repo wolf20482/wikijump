@@ -30,6 +30,8 @@ class AccountNotificationsFeed extends FeedScreen
     public function build($runData)
     {
 
+        $glang = null;
+        $channel = [];
         $user = $runData->getTemp("user");
         $userId = $user->id;
 
@@ -72,23 +74,13 @@ class AccountNotificationsFeed extends FeedScreen
             $item = array();
 
             $item['title'] = $not->getTitle();
-            switch ($not->getType()) {
-                case "new_private_message":
-                    $item['link'] = GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/messages/inboxmessage/".$extra['message_id'];
-                    break;
-                case "new_membership_invitation":
-                    $item['link'] = GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/invitations";
-                    break;
-                case 'membership_application_accepted':
-                    $item['link'] = GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/applications";
-                    break;
-                case 'membership_application_declined':
-                    $item['link'] = GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/applications";
-                    break;
-                default:
-                    $item['link'] = GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/notifications"."#notification-".$not->getNotificationId();
-                    ;
-            }
+            $item['link'] = match ($not->getType()) {
+                "new_private_message" => GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/messages/inboxmessage/".$extra['message_id'],
+                "new_membership_invitation" => GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/invitations",
+                'membership_application_accepted' => GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/applications",
+                'membership_application_declined' => GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/applications",
+                default => GlobalProperties::$HTTP_SCHEMA . "://" . GlobalProperties::$URL_HOST . "/account:you/start/notifications"."#notification-".$not->getNotificationId(),
+            };
 
             $body = $not->getBody();
 

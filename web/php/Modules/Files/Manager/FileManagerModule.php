@@ -20,7 +20,7 @@ class FileManagerModule extends SmartyModule
         $totalSize = FileHelper::totalSiteFilesSize($site->getSiteId());
         $allowed = $settings->getFileStorageSize();
 
-        $maxUpload = min($allowed - $totalSize, 5242880);
+        $maxUpload = min($allowed - $totalSize, 5_242_880);
 
         $numberOfFiles = FileHelper::totalSiteFileNumber($site->getSiteId());
 

@@ -134,7 +134,7 @@ class GlobalHotTagsModule extends SmartyModule
         }
 
         // Build weights (legacy Wikidot)
-        $minWeight = 10000000;
+        $minWeight = 10_000_000;
         $maxWeight = 0;
 
         foreach ($tag_counts as $tag => $weight) {

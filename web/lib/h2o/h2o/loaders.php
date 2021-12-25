@@ -55,7 +55,7 @@ class H2o_File_Loader extends H2o_Loader {
 	function get_template_path($search_path, $filename){
 
         
-        for ($i=0 ; $i < count($search_path) ; $i++) 
+        for ($i=0 ; $i < (is_countable($search_path) ? count($search_path) : 0) ; $i++) 
         { 
             
             if(file_exists($search_path[$i] . $filename)) {
@@ -176,7 +176,7 @@ class H2o_File_Cache {
         if (isset($options['cache_dir']) && is_writable($options['cache_dir'])) {
             $path = $options['cache_dir'];
         } else {
-            $path = dirname($tmp = tempnam(uniqid(rand(), true), ''));
+            $path = dirname($tmp = tempnam(uniqid(random_int(0, mt_getrandmax()), true), ''));
 
             if (file_exists($tmp)) unlink($tmp);
         }
@@ -277,14 +277,14 @@ class H2o_Memcache_Cache {
     }
     
     function read( $filename ){
-    	return memcache_get( $this->object, $this->prefix.$filename );
+    	return memcache_get();
     }
     
     function write( $filename, $content ) {
-    	return memcache_set( $this->object,$this->prefix.$filename,$content , MEMCACHE_COMPRESSED,$this->ttl );
+    	return memcache_set();
     }
     
     function flush(){
-    	return memcache_flush( $this->object );
+    	return memcache_flush();
     }
 }

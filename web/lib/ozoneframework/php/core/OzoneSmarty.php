@@ -16,7 +16,7 @@ require_once (SMARTY_DIR.'Smarty.class.php');
 class OzoneSmarty extends Smarty{
 
 	private $currentTemplate;
-	private $macros = array();
+	private array $macros = array();
 ##	public $plugins_dir;
 
 	public function __construct(){

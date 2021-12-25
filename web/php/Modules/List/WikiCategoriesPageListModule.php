@@ -22,7 +22,7 @@ class WikiCategoriesPageListModule extends SmartyModule
         $c->addOrderAscending("COALESCE(title, unix_name)");
         $pages = PagePeer::instance()->select($c);
 
-        if (count($pages)>0) {
+        if ((is_countable($pages) ? count($pages) : 0)>0) {
             $runData->contextAdd("pages", $pages);
         }
 

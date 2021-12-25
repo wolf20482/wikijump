@@ -16,7 +16,7 @@ class GlobalUserBlockBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='global_user_block';
-        $this->peerName = 'Wikidot\\DB\\GlobalUserBlockPeer';
+        $this->peerName = GlobalUserBlockPeer::class;
         $this->primaryKeyName = 'block_id';
         $this->fieldNames = array( 'block_id' ,  'site_id' ,  'user_id' ,  'reason' ,  'date_blocked' );
 

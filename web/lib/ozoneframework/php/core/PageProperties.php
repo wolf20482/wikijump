@@ -12,24 +12,24 @@ namespace Ozone\Framework;
  */
 class PageProperties{
 
-	private $title = "No title";
-	private $styles1 = array();
-	private $styles2 = array();
-	private $jsFiles = array();
-	private $meta = array();
-	private $httpEquivs = array();
-	private $bodyProperties = array();
-	private $links = array();
-	private $skin = "default";
+	private string $title = "No title";
+	private array $styles1 = array();
+	private array $styles2 = array();
+	private array $jsFiles = array();
+	private array $meta = array();
+	private array $httpEquivs = array();
+	private array $bodyProperties = array();
+	private array $links = array();
+	private string $skin = "default";
 
-	private $layout = "Default";
+	private string $layout = "Default";
 
-	private $styleRaw1 = array();
-	private $styleRaw2 = array();
-	private $jsRaw = array();
-	private $headRaw = array();
+	private array $styleRaw1 = array();
+	private array $styleRaw2 = array();
+	private array $jsRaw = array();
+	private array $headRaw = array();
 
-	private $styleSelector = 2;
+	private int $styleSelector = 2;
 
 	public function setStyleSelector($selector){
 		$this->styleSelector = $selector;

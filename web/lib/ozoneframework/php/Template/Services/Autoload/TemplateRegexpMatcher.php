@@ -12,11 +12,10 @@ use Ozone\Framework\TemplateService;
  */
 class TemplateRegexpMatcher extends TemplateService{
 
-	private $runData;
 	protected $serviceName = "templateMatcher";
 
-	public function __construct($runData){
-		$this->runData = $runData;
+	public function __construct(private $runData)
+	{
 	}
 
 	public function match($pattern){

@@ -21,7 +21,7 @@ class WDRenderUtils
                 $out .=     '<a '.$linkInner.' ><img class="small" src="' .$user->avatar() . '" alt="' . $user->username . '"/></a>';
             }
             $out .= '<a '.$linkInner.'>'._('Anonymous');
-            list($ip, $proxy) = explode("|", $user);
+            [$ip, $proxy] = explode("|", $user);
 
             if (!$params['noip']) {
                 $out .= ' <span class="ip">('.htmlspecialchars($ip).')</span>';

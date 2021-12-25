@@ -52,6 +52,6 @@ class SitesListByTagModule extends CacheableModule
 
         $runData->contextAdd("tag", $tag);
         $runData->contextAdd("sites", $sites);
-        $runData->contextAdd("sitesCount", count($sites));
+        $runData->contextAdd("sitesCount", is_countable($sites) ? count($sites) : 0);
     }
 }

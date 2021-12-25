@@ -4,30 +4,31 @@ namespace Ozone\Framework\Template\Services\Autoload;
 
 
 
+use Stringable;
 use Ozone\Framework\TemplateService;
 use Wikidot\Utils\GlobalProperties;
 
 /**
  * Link-building service.
  */
-class LinkService extends TemplateService{
+class LinkService extends TemplateService implements Stringable{
 
 	protected $serviceName = "link";
 
-	private $protocol = "http";
+	private string $protocol = "http";
 	private $queryPath;
-	private $parameters = array ();
+	private array $parameters = array ();
 	private $templateName;
 
-	private $redirect = false;
+	private bool $redirect = false;
 
 	private $runData;
 
 	private $languageCache;
 	private $skinCache;
 
-	private $passLanguage = false;
-	private $passSkin = false;
+	private bool $passLanguage = false;
+	private bool $passSkin = false;
 
 	public function __construct($runData = null){
 		$this->languageCache = $runData->getLanguage();
@@ -149,7 +150,7 @@ class LinkService extends TemplateService{
 
 	}
 
-	public function __toString(){
+	public function __toString(): string{
 		return $this->render();
 	}
 

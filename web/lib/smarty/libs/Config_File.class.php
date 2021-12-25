@@ -109,11 +109,11 @@ class Config_File {
      * @param string $var_name (optional) variable to get info for
      * @return string|array a value or array of values
      */
-    function get($file_name, $section_name = NULL, $var_name = NULL)
+    function get($file_name, $section_name = NULL, $var_name = NULL): array|string|null
     {
         if (empty($file_name)) {
             $this->_trigger_error_msg('Empty config file name');
-            return;
+            return null;
         } else {
             $file_name = $this->_config_path . $file_name;
             if (!isset($this->_config_data[$file_name]))
@@ -149,9 +149,9 @@ class Config_File {
      * @return string|array same as get()
      * @uses get() retrieves information from config file and returns it
      */
-    function &get_key($config_key)
+    function &get_key($config_key): array|string
     {
-        list($file_name, $section_name, $var_name) = explode('/', $config_key, 3);
+        [$file_name, $section_name, $var_name] = explode('/', $config_key, 3);
         $result = &$this->get($file_name, $section_name, $var_name);
         return $result;
     }
@@ -285,7 +285,7 @@ class Config_File {
         /* parse file line by line */
         preg_match_all('!^.*\r?\n?!m', $contents, $match);
         $lines = $match[0];
-        for ($i=0, $count=count($lines); $i<$count; $i++) {
+        for ($i=0, $count=is_countable($lines) ? count($lines) : 0; $i<$count; $i++) {
             $line = $lines[$i];
             if (empty($line)) continue;
 
@@ -313,7 +313,7 @@ class Config_File {
             if (preg_match('/^\s*(\.?\w+)\s*=\s*(.*)/s', $line, $match)) {
                 /* variable found */
                 $var_name = rtrim($match[1]);
-                if (strpos($match[2], '"""') === 0) {
+                if (str_starts_with($match[2], '"""')) {
                     /* handle multiline-value */
                     $lines[$i] = substr($match[2], 3);
                     $var_value = '';

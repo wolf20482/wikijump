@@ -12,6 +12,7 @@ class UserRecentPostsListModule extends SmartyLocalizedModule
     public function build($runData)
     {
 
+        $own = null;
         $site = $runData->getTemp("site");
         $pl = $runData->getParameterList();
 
@@ -54,7 +55,7 @@ class UserRecentPostsListModule extends SmartyLocalizedModule
         $c->setLimit($count, $offset);
         $posts = ForumPostPeer::instance()->select($c);
 
-        $counted = count($posts);
+        $counted = is_countable($posts) ? count($posts) : 0;
         $pagerData = array();
         $pagerData['currentPage'] = $pageNumber;
         if ($counted >$perPage*2) {

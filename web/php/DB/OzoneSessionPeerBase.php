@@ -5,6 +5,7 @@ namespace Wikidot\DB;
 
 
 
+use Ozone\Framework\DB\OzoneSession;
 use Ozone\Framework\Database\BaseDBPeer;
 
 /**
@@ -17,7 +18,7 @@ class OzoneSessionPeerBase extends BaseDBPeer
     protected function internalInit()
     {
         $this->tableName='ozone_session';
-        $this->objectName='Ozone\\Framework\\DB\\OzoneSession';
+        $this->objectName=OzoneSession::class;
         $this->primaryKeyName = 'session_id';
         $this->fieldNames = array( 'session_id' ,  'started' ,  'last_accessed' ,  'ip_address' ,  'ip_address_ssl' ,  'ua_hash' ,  'check_ip' ,  'infinite' ,  'user_id' ,  'serialized_datablock' );
         $this->fieldTypes = array( 'session_id' => 'varchar(60)',  'started' => 'timestamp',  'last_accessed' => 'timestamp',  'ip_address' => 'varchar(90)',  'ip_address_ssl' => 'varchar(90)',  'ua_hash' => 'varchar(256)',  'check_ip' => 'boolean',  'infinite' => 'boolean',  'user_id' => 'int',  'serialized_datablock' => 'bytea');
@@ -27,7 +28,7 @@ class OzoneSessionPeerBase extends BaseDBPeer
     public static function instance()
     {
         if (self::$peerInstance == null) {
-            $className = 'Wikidot\\DB\\OzoneSessionPeer';
+            $className = OzoneSessionPeer::class;
             self::$peerInstance = new $className();
         }
         return self::$peerInstance;

@@ -17,7 +17,6 @@ class ContactsAction extends SmartyAction
     /**
      * Check if this user is allowed to add a contact.
      * @param $runData
-     * @return bool
      * @throws WDPermissionException
      */
     public function isAllowed($runData): bool

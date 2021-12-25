@@ -16,7 +16,7 @@ class ForumGroupBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='forum_group';
-        $this->peerName = 'Wikidot\\DB\\ForumGroupPeer';
+        $this->peerName = ForumGroupPeer::class;
         $this->primaryKeyName = 'group_id';
         $this->fieldNames = array( 'group_id' ,  'name' ,  'description' ,  'sort_index' ,  'site_id' ,  'visible' );
 

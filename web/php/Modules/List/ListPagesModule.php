@@ -30,7 +30,7 @@ class ListPagesModule extends SmartyModule
     private $_tmpSource;
     private $_tmpPage;
 
-    private $_vars = array();
+    private array $_vars = array();
 
     private $_pl;
 
@@ -55,7 +55,7 @@ class ListPagesModule extends SmartyModule
         $this->parameterhash = $parmHash;
         /* Check if recursive. */
         foreach ($this->_moduleChain as $m) {
-            if (get_class($m) == 'ListPagesModule') {
+            if ($m::class == 'ListPagesModule') {
                 return '<div class="error-block">The ListPages module does not work recursively.</div>';
             }
         }
@@ -335,7 +335,7 @@ class ListPagesModule extends SmartyModule
                 $n = 1;
             }
             $unit = $m[2];
-            $convarray = array('day' => 86400, 'week' => 604800, 'month' => 2592000);
+            $convarray = array('day' => 86400, 'week' => 604800, 'month' => 2_592_000);
             $dateObj->subtractSeconds($n * $convarray[$unit]);
             $c->add('date_created', $dateObj, '>');
         }
@@ -414,10 +414,10 @@ class ListPagesModule extends SmartyModule
             case 'ratingDesc':
                 $c->addOrderDescending('rate');
                 break;
-            default:
             case 'dateCreatedDesc':
                 $c->addOrderDescending('page_id');
                 break;
+            default:
         }
 
         $pages = PagePeer::instance()->select($c);
@@ -665,7 +665,7 @@ class ListPagesModule extends SmartyModule
 
     private function _handleSummary($m)
     {
-        if (isset($this->_tmpSplitSource[0]) && count($this->_tmpSplitSource) > 1) {
+        if (isset($this->_tmpSplitSource[0]) && (is_countable($this->_tmpSplitSource) ? count($this->_tmpSplitSource) : 0) > 1) {
             return trim($this->_tmpSplitSource[0]);
         } else {
             /* Try to extract the short version. */
@@ -701,6 +701,7 @@ class ListPagesModule extends SmartyModule
 
     private function _handleTags($m)
     {
+        $pageId = null;
         $page = $this->_tmpPage;
         /* Select tags. */
         // get the tags
@@ -738,6 +739,7 @@ class ListPagesModule extends SmartyModule
 
     protected function _readParameter($name, $fromUrl = false)
     {
+        $val = null;
         $pl = $this->_pl;
         $name = (array) $name;
         foreach ($name as $n) {

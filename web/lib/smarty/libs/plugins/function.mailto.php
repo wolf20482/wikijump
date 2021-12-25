@@ -49,6 +49,7 @@
  */
 function smarty_function_mailto($params, &$smarty)
 {
+    $ord = [];
     $extra = '';
 
     if (empty($params['address'])) {
@@ -81,7 +82,7 @@ function smarty_function_mailto($params, &$smarty)
 
             case 'extra':
             case 'text':
-                $$var = $value;
+                ${$var} = $value;
 
             default:
         }

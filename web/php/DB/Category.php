@@ -140,7 +140,7 @@ class Category extends CategoryBase
     public function getRatingString()
     {
         $ppd = $this->getRating();
-        if (strpos($ppd, 'e') === false && strpos($ppd, 'd') === false && $this->getName() !== '_default') {
+        if (!str_contains($ppd, 'e') && !str_contains($ppd, 'd') && $this->getName() !== '_default') {
             $dc = CategoryPeer::instance()->selectByName('_default', $this->getSiteId());
             $ppd = $dc->getRating();
         }
@@ -154,21 +154,20 @@ class Category extends CategoryBase
      * If the 'e' character is present in this category's `rating` table, return
      * true. Otherwise, return false.
      *
-     * @return bool
      * @see PageRateWidgetModule::build()
      */
     public function getRatingEnabled() : bool
     {
         $s = $this->getRating();
-        return strpos($s, 'e') !== false;
+        return str_contains($s, 'e');
     }
 
     public function getRatingEnabledEff()
     {
         $s = $this->getRatingString();
-        if (strpos($s, 'e') !== false) {
+        if (str_contains($s, 'e')) {
             return true;
-        } elseif (strpos($s, 'd') !== false) {
+        } elseif (str_contains($s, 'd')) {
             return false;
         } else {
             return null;
@@ -197,7 +196,7 @@ class Category extends CategoryBase
     public function getRatingBy()
     {
         $s = $this->getRatingString();
-        if (strpos($s, 'm') !== false) {
+        if (str_contains($s, 'm')) {
             return 'm';
         } else {
             return 'r';
@@ -207,7 +206,7 @@ class Category extends CategoryBase
     public function getRatingVisible()
     {
         $s = $this->getRatingString();
-        if (strpos($s, 'v')!== false) {
+        if (str_contains($s, 'v')) {
             return 'v';
         } else {
             return 'a';

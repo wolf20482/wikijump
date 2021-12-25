@@ -12,7 +12,6 @@ class WDStringUtils
      * For another implementation, see https://github.com/scpwiki/wikidot-normalize
      *
      * @param string $text The text to be normalized.
-     * @return string
      */
     public static function toUnixName(string $text): string
     {

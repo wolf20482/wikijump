@@ -44,7 +44,7 @@ class RenamePageModule extends SmartyModule
         $canDelete = true;
         try {
             WDPermissionManager::instance()->hasPagePermission('delete', $user, $category, $page);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $canDelete = false;
         }
 

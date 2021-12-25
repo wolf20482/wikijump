@@ -54,7 +54,8 @@ class Text_Wiki_Render_Xhtml_Image extends Text_Wiki_Render {
 
     function token($options)
     {
-        // note the image source
+        $output = null;
+								// note the image source
         $src = $options['src'];
 
         $size = $options['attr']['size'];
@@ -79,7 +80,7 @@ class Text_Wiki_Render_Xhtml_Image extends Text_Wiki_Render {
     		}
         }
 
-        if (strpos($src, '://') === false) {
+        if (!str_contains($src, '://')) {
         		// 	is the source a local file or URL?
             // the source refers to a local file.
             // add the URL base to it.
@@ -97,7 +98,7 @@ class Text_Wiki_Render_Xhtml_Image extends Text_Wiki_Render {
             // see if it refers to a different page
             	if($postVars || preg_match("/^%%%[^%]+%%$/", $src)){
             			// this is ok. used for feed parsing.
-            	}elseif (strpos($src, '/') !== false) {
+            	}elseif (str_contains($src, '/')) {
             		if($size){
             			$src = preg_replace("/^\//", '', $src);
             			$src = "/local--resized-images/".$src.'/'.$size.'.jpg';

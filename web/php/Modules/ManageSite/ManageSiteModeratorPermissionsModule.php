@@ -21,13 +21,13 @@ class ManageSiteModeratorPermissionsModule extends ManageSiteBaseModule
         $runData->contextAdd("moderator", $mod);
         $ps = $mod->getPermissions();
 
-        if (strpos($ps, 'p')!== false) {
+        if (str_contains($ps, 'p')) {
             $runData->contextAdd("ppages", true);
         }
-        if (strpos($ps, 'f')!== false) {
+        if (str_contains($ps, 'f')) {
             $runData->contextAdd("pforum", true);
         }
-        if (strpos($ps, 'u')!== false) {
+        if (str_contains($ps, 'u')) {
             $runData->contextAdd("pusers", true);
         }
 

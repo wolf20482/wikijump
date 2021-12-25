@@ -19,6 +19,7 @@ class PageCommentsFeed extends FeedScreen
 
     public function render($runData)
     {
+        $changeTimestamp = null;
         $site = $runData->getTemp("site");
 
         $pl = $runData->getParameterList();

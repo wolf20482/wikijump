@@ -16,7 +16,7 @@ class UserBlockBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='user_block';
-        $this->peerName = 'Wikidot\\DB\\UserBlockPeer';
+        $this->peerName = UserBlockPeer::class;
         $this->primaryKeyName = 'block_id';
         $this->fieldNames = array( 'block_id' ,  'site_id' ,  'user_id' ,  'reason' ,  'date_blocked' );
 

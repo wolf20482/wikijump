@@ -25,7 +25,7 @@ class AccountWikiNewslettersModule extends AccountBaseModule
         $c->addOrderAscending("site.name");
 
         $mems = MemberPeer::instance()->select($c);
-        if (count($mems)>0) {
+        if ((is_countable($mems) ? count($mems) : 0)>0) {
             $runData->contextAdd("mems", $mems);
         }
 

@@ -13,6 +13,7 @@ class ModeratorBaseModule extends SmartyModule
      */
     public function isAllowed($runData)
     {
+        $user = null;
         $runData->getUser();
         if ($user) {
             $c = new Criteria();

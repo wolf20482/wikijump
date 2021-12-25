@@ -5,11 +5,8 @@ namespace Wikidot\Form\Field;
 
 class Base
 {
-    protected $field;
-
-    public function __construct($field)
+    public function __construct(protected $field)
     {
-        $this->field = $field;
     }
 
     public function renderView()

@@ -177,7 +177,7 @@ class WikiPageAction extends SmartyAction
                     $conflictLocks = $lock->getConflicts();
                     if ($conflictLocks == null) {
                         // safely recreate lock
-                        $secret = md5(time().rand(1000, 9999));
+                        $secret = md5(time().random_int(1000, 9999));
                         $lock->setSecret($secret);
                         $lock->setSessionId($runData->getSession()->getSessionId());
                         $lock->save();
@@ -339,7 +339,7 @@ class WikiPageAction extends SmartyAction
                 $conflictLocks = $lock->getConflicts();
                 if ($conflictLocks == null) {
                     // safely recreate lock
-                    $secret = md5(time().rand(1000, 9999));
+                    $secret = md5(time().random_int(1000, 9999));
                     $lock->setSecret($secret);
                     $lock->setSessionId($runData->getSession()->getSessionId());
                     $lock->save();
@@ -491,6 +491,7 @@ class WikiPageAction extends SmartyAction
 
     public function updateLockEvent($runData)
     {
+        $page = null;
         $pl = $runData->getParameterList();
         $pageId = $pl->getParameterValue("page_id");
 
@@ -572,7 +573,7 @@ class WikiPageAction extends SmartyAction
                 $conflictLocks = $lock->getConflicts();
                 if ($conflictLocks == null) {
                     // safely recreate lock
-                    $secret = md5(time().rand(1000, 9999));
+                    $secret = md5(time().random_int(1000, 9999));
                     $lock->setSecret($secret);
                     $lock->setSessionId($runData->getSession()->getSessionId());
                     $lock->save();
@@ -651,7 +652,7 @@ class WikiPageAction extends SmartyAction
 
         $lock->setDateStarted(new ODate());
         $lock->setDateLastAccessed(new ODate());
-        $secret = md5(time().rand(1000, 9999));
+        $secret = md5(time().random_int(1000, 9999));
         $lock->setSecret($secret);
         $lock->setSessionId($runData->getSession()->getSessionId());
 
@@ -756,7 +757,7 @@ class WikiPageAction extends SmartyAction
 
         $locks = PageEditLockPeer::instance()->select($c);
 
-        if (count($locks)>0) {
+        if ((is_countable($locks) ? count($locks) : 0)>0) {
             $runData->ajaxResponseAdd("locks", true);
             $runData->contextAdd("locks", $locks);
             $runData->setModuleTemplate("Rename/PageLockedWin");
@@ -849,7 +850,7 @@ class WikiPageAction extends SmartyAction
                 // the new category!!!
                 try {
                     WDPermissionManager::instance()->hasPagePermission('create', $user, $category);
-                } catch (Exception $e) {
+                } catch (Exception) {
                     throw new ProcessException(_("You are not allowed to create new pages in the destination category")." \"".$category->getName()."\".", "not_allowed");
                 }
             }
@@ -867,7 +868,7 @@ class WikiPageAction extends SmartyAction
                 if ($count == 0) {
                     // delete the category
                     CategoryPeer::instance()->delete($c);
-                    $outdater->categoryEvent('delete', $category, $site);
+                    $outdater->categoryEvent('delete', $category);
                 }
             }
         }
@@ -975,7 +976,7 @@ class WikiPageAction extends SmartyAction
             $category2 = $pp->getCategory();
             try {
                 WDPermissionManager::instance()->hasPagePermission('edit', $user, $category2);
-            } catch (Exception $e) {
+            } catch (Exception) {
                 throw new ProcessException(_('You are not allowed to alter contents of the parent page. You should have the "edit" permission on the parent page too.'), "not_allowed");
             }
             $ppId = $pp->getPageId();
@@ -1043,6 +1044,8 @@ class WikiPageAction extends SmartyAction
 
     public function revertEvent($runData)
     {
+        $sourceChanged = null;
+        $userString = null;
         $pl = $runData->getParameterList();
         $pageId = $pl->getParameterValue("pageId");
         $revisionId = $pl->getParameterValue("revisionId");
@@ -1087,7 +1090,7 @@ class WikiPageAction extends SmartyAction
 
         $locks = PageEditLockPeer::instance()->select($c);
 
-        if (count($locks) > 0) {
+        if ((is_countable($locks) ? count($locks) : 0) > 0) {
             $runData->ajaxResponseAdd("locks", true);
             $runData->contextAdd("locks", $locks);
             $runData->setModuleTemplate("History/RevertPageLockedWin");
@@ -1276,7 +1279,7 @@ class WikiPageAction extends SmartyAction
         $c->add("site_id", $page->getSiteId());
         $c->add("user_id", $user->id);
         $rel = ModeratorPeer::instance()->selectOne($c);
-        if ($rel && strpos($rel->getPermissions(), 'p') !== false) {
+        if ($rel && str_contains($rel->getPermissions(), 'p')) {
             return true;
         }
 

@@ -16,7 +16,7 @@ class PageRevisionBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='page_revision';
-        $this->peerName = 'Wikidot\\DB\\PageRevisionPeer';
+        $this->peerName = PageRevisionPeer::class;
         $this->primaryKeyName = 'revision_id';
         $this->fieldNames = array( 'revision_id' ,  'page_id' ,  'site_id' ,  'metadata_id' ,  'flags' ,  'flag_text' ,  'flag_title' ,  'flag_file' ,  'flag_rename' ,  'flag_meta' ,  'flag_new' ,   'revision_number' ,  'date_last_edited' ,  'user_id' ,  'user_string' ,  'comments' );
 

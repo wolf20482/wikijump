@@ -123,6 +123,8 @@ class PageCalendarModule extends SmartyModule
     public function build($runData)
     {
 
+        $lang = null;
+        $locale = null;
         $pl = $runData->getParameterList();
         $this->_pl = $pl;
         $site = $runData->getTemp("site");
@@ -357,6 +359,7 @@ class PageCalendarModule extends SmartyModule
 
     protected function _readParameter($name, $fromUrl = false)
     {
+        $val = null;
         $pl = $this->_pl;
         $name = (array) $name;
         foreach ($name as $n) {

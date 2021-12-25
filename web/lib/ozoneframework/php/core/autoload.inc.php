@@ -21,7 +21,7 @@ $classpath[] = $apath."/conf";
 $GLOBALS['classpath'] = $classpath;
 
 $paths = explode(PATH_SEPARATOR, get_include_path());
-$paths = array_merge($paths, $classpath);
+$paths = [...$paths, ...$classpath];
 $paths = array_unique($paths);
 $paths = implode(PATH_SEPARATOR, $paths);
 set_include_path($paths);

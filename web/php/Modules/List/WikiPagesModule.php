@@ -17,6 +17,7 @@ class WikiPagesModule extends CacheableModule
     public function build($runData)
     {
 
+        $category = null;
         $pl = $runData->getParameterList();
         $site = $runData->getTemp("site");
 

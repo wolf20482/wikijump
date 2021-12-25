@@ -52,7 +52,7 @@ class PageBlockModule extends SmartyModule
         $c->add("site_id", $page->getSiteId());
         $c->add("user_id", $user->id);
         $rel = ModeratorPeer::instance()->selectOne($c);
-        if ($rel && strpos($rel->getPermissions(), 'p') !== false) {
+        if ($rel && str_contains($rel->getPermissions(), 'p')) {
             return true;
         }
 

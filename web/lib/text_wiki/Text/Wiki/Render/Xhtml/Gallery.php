@@ -95,7 +95,7 @@ class Text_Wiki_Render_Xhtml_Gallery extends Text_Wiki_Render {
 				   	$target  = 'target="_blank"';
 				}
 
-		        if(strpos($src, '://') !== false){
+		        if(str_contains($src, '://')){
 		        	$attr['link'] = $src;
 		        	$size = "original";
 		        }else{
@@ -167,7 +167,7 @@ class Text_Wiki_Render_Xhtml_Gallery extends Text_Wiki_Render {
     		$c->add("has_resized", true);
     		$files = FilePeer::instance()->select($c);
 
-    		if(count($files) == 0){
+    		if((is_countable($files) ? count($files) : 0) == 0){
     			return '<div class="error-block">Sorry, no images found attached ' .
     					'to this page.</div>';
     		}

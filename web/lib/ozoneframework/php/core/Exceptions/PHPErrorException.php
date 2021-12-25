@@ -11,12 +11,9 @@ use Exception;
  */
 class PHPErrorException extends Exception {
 
-    private $context = null;
-
-    public function __construct($code, $message, $file, $line, $context = null) {
+    public function __construct($code, $message, $file, $line, private $context = null) {
         parent::__construct($message, $code);
         $this->file = $file;
         $this->line = $line;
-        $this->context = $context;
     }
 }

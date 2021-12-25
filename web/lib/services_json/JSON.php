@@ -152,29 +152,15 @@ class Services_JSON
             return mb_convert_encoding($utf16, 'UTF-8', 'UTF-16');
 
         $bytes = (ord($utf16[0]) << 8) | ord($utf16[1]);
-
-        switch(true) {
-            case ((0x7F & $bytes) == $bytes):
-                // this case should never be reached, because we are in ASCII range
-                // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                return chr(0x7F & $bytes);
-
-            case (0x07FF & $bytes) == $bytes:
-                // return a 2-byte UTF-8 character
-                // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                return chr(0xC0 | (($bytes >> 6) & 0x1F))
-                     . chr(0x80 | ($bytes & 0x3F));
-
-            case (0xFFFF & $bytes) == $bytes:
-                // return a 3-byte UTF-8 character
-                // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                return chr(0xE0 | (($bytes >> 12) & 0x0F))
-                     . chr(0x80 | (($bytes >> 6) & 0x3F))
-                     . chr(0x80 | ($bytes & 0x3F));
-        }
-
-        // ignoring UTF-32 for now, sorry
-        return '';
+        return match (true) {
+            (0x7F & $bytes) == $bytes => chr(0x7F & $bytes),
+            (0x07FF & $bytes) == $bytes => chr(0xC0 | (($bytes >> 6) & 0x1F))
+                 . chr(0x80 | ($bytes & 0x3F)),
+            (0xFFFF & $bytes) == $bytes => chr(0xE0 | (($bytes >> 12) & 0x0F))
+                 . chr(0x80 | (($bytes >> 6) & 0x3F))
+                 . chr(0x80 | ($bytes & 0x3F)),
+            default => '',
+        };
     }
 
    /**
@@ -193,31 +179,17 @@ class Services_JSON
         // oh please oh please oh please oh please oh please
         if(function_exists('mb_convert_encoding'))
             return mb_convert_encoding($utf8, 'UTF-16', 'UTF-8');
-
-        switch(strlen($utf8)) {
-            case 1:
-                // this case should never be reached, because we are in ASCII range
-                // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                return $utf8;
-
-            case 2:
-                // return a UTF-16 character from a 2-byte UTF-8 char
-                // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                return chr(0x07 & (ord($utf8[0]) >> 2))
-                     . chr((0xC0 & (ord($utf8[0]) << 6))
-                         | (0x3F & ord($utf8[1])));
-
-            case 3:
-                // return a UTF-16 character from a 3-byte UTF-8 char
-                // see: http://www.cl.cam.ac.uk/~mgk25/unicode.html#utf-8
-                return chr((0xF0 & (ord($utf8[0]) << 4))
-                         | (0x0F & (ord($utf8[1]) >> 2)))
-                     . chr((0xC0 & (ord($utf8[1]) << 6))
-                         | (0x7F & ord($utf8[2])));
-        }
-
-        // ignoring UTF-32 for now, sorry
-        return '';
+        return match (strlen($utf8)) {
+            1 => $utf8,
+            2 => chr(0x07 & (ord($utf8[0]) >> 2))
+                 . chr((0xC0 & (ord($utf8[0]) << 6))
+                     | (0x3F & ord($utf8[1]))),
+            3 => chr((0xF0 & (ord($utf8[0]) << 4))
+                     | (0x0F & (ord($utf8[1]) >> 2)))
+                 . chr((0xC0 & (ord($utf8[1]) << 6))
+                     | (0x7F & ord($utf8[2]))),
+            default => '',
+        };
     }
 
    /**
@@ -378,7 +350,7 @@ class Services_JSON
                                             array_values($var));
 
                     foreach($properties as $property)
-                        if(Services_JSON::isError($property))
+                        if((new Services_JSON())->isError($property))
                             return $property;
 
                     return '{' . join(',', $properties) . '}';
@@ -388,7 +360,7 @@ class Services_JSON
                 $elements = array_map(array($this, 'encode'), $var);
 
                 foreach($elements as $element)
-                    if(Services_JSON::isError($element))
+                    if((new Services_JSON())->isError($element))
                         return $element;
 
                 return '[' . join(',', $elements) . ']';
@@ -401,7 +373,7 @@ class Services_JSON
                                         array_values($vars));
 
                 foreach($properties as $property)
-                    if(Services_JSON::isError($property))
+                    if((new Services_JSON())->isError($property))
                         return $property;
 
                 return '{' . join(',', $properties) . '}';
@@ -426,7 +398,7 @@ class Services_JSON
     {
         $encoded_value = $this->encode($value);
 
-        if(Services_JSON::isError($encoded_value))
+        if((new Services_JSON())->isError($encoded_value))
             return $encoded_value;
 
         return $this->encode(strval($name)) . ':' . $encoded_value;
@@ -473,6 +445,8 @@ class Services_JSON
     */
     function decode($str)
     {
+        $arr = null;
+        $obj = [];
         $str = $this->reduce_string($str);
 
         switch (strtolower($str)) {
@@ -750,7 +724,7 @@ class Services_JSON
      */
     function isError($data, $code = null)
     {
-       if (is_object($data) && (get_class($data) == 'services_json_error' ||
+       if (is_object($data) && ($data::class == 'services_json_error' ||
                                  is_subclass_of($data, 'services_json_error'))) {
             return true;
         }

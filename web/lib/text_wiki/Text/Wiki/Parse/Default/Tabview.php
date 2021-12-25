@@ -28,7 +28,7 @@
 
 class Text_Wiki_Parse_Tabview extends Text_Wiki_Parse {
 
-    private static $_counter = 0;
+    private static int $_counter = 0;
 
     /**
      *
@@ -57,9 +57,9 @@ class Text_Wiki_Parse_Tabview extends Text_Wiki_Parse {
 
     private $_startTabToken;
     private $_endTabToken;
-    private $_tabs = array();
+    private array $_tabs = array();
 
-    private $_tabCounter = 0;
+    private int $_tabCounter = 0;
 
     function process(&$matches) {
         $this->_tabs = array();

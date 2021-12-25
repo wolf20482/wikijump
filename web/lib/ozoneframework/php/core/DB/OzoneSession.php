@@ -16,11 +16,11 @@ use Wikijump\Models\User;
  */
 class OzoneSession extends OzoneSessionBase {
 
-	private $serializedData = array();
+	private array $serializedData = array();
 
-	private $newSession = false;
+	private bool $newSession = false;
 
-	private $sessionChanged = false;
+	private bool $sessionChanged = false;
 
 	private $cachedUser = null;
 

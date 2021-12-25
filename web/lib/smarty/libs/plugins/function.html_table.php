@@ -48,6 +48,7 @@
  */
 function smarty_function_html_table($params, &$smarty)
 {
+    $loop = [];
     $table_attr = 'border="1"';
     $tr_attr = '';
     $th_attr = '';
@@ -68,7 +69,7 @@ function smarty_function_html_table($params, &$smarty)
     foreach ($params as $_key=>$_value) {
         switch ($_key) {
             case 'loop':
-                $$_key = (array)$_value;
+                ${$_key} = (array)$_value;
                 break;
 
             case 'cols':
@@ -86,7 +87,7 @@ function smarty_function_html_table($params, &$smarty)
                 break;
 
             case 'rows':
-                $$_key = (int)$_value;
+                ${$_key} = (int)$_value;
                 break;
 
             case 'table_attr':
@@ -95,18 +96,18 @@ function smarty_function_html_table($params, &$smarty)
             case 'vdir':
             case 'inner':
             case 'caption':
-                $$_key = (string)$_value;
+                ${$_key} = (string)$_value;
                 break;
 
             case 'tr_attr':
             case 'td_attr':
             case 'th_attr':
-                $$_key = $_value;
+                ${$_key} = $_value;
                 break;
         }
     }
 
-    $loop_count = count($loop);
+    $loop_count = is_countable($loop) ? count($loop) : 0;
     if (empty($params['rows'])) {
         /* no rows specified */
         $rows = ceil($loop_count/$cols_count);

@@ -16,7 +16,7 @@ class ThemePreviewBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='theme_preview';
-        $this->peerName = 'Wikidot\\DB\\ThemePreviewPeer';
+        $this->peerName = ThemePreviewPeer::class;
         $this->primaryKeyName = 'theme_id';
         $this->fieldNames = array( 'theme_id' ,  'body' );
 

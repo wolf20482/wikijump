@@ -17,7 +17,7 @@ class AdminPeerBase extends BaseDBPeer
     protected function internalInit()
     {
         $this->tableName='admin';
-        $this->objectName='Wikidot\\DB\\Admin';
+        $this->objectName=Admin::class;
         $this->primaryKeyName = 'admin_id';
         $this->fieldNames = array( 'admin_id' ,  'site_id' ,  'user_id' ,  'founder' );
         $this->fieldTypes = array( 'admin_id' => 'serial',  'site_id' => 'int',  'user_id' => 'int',  'founder' => 'boolean');
@@ -27,7 +27,7 @@ class AdminPeerBase extends BaseDBPeer
     public static function instance()
     {
         if (self::$peerInstance == null) {
-            $className = 'Wikidot\\DB\\AdminPeer';
+            $className = AdminPeer::class;
             self::$peerInstance = new $className();
         }
         return self::$peerInstance;

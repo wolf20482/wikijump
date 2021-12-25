@@ -75,8 +75,8 @@ class AccountSettingsAction extends SmartyAction
         }
 
         // generate code
-        srand((double)microtime()*1000000);
-        $string = md5(rand(0, 9999));
+        mt_srand((double)microtime()*1_000_000);
+        $string = md5(random_int(0, 9999));
         $evcode = substr($string, 2, 6);
 
         //send a confirmation email to the user.

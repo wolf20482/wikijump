@@ -24,7 +24,7 @@ class AccountModeratorOfModule extends AccountBaseModule
         $c->add("site.deleted", false);
 
         $mems = ModeratorPeer::instance()->select($c);
-        if (count($mems)>0) {
+        if ((is_countable($mems) ? count($mems) : 0)>0) {
             $runData->contextAdd("moderators", $mems);
         }
     }

@@ -24,7 +24,7 @@ class AccountMemberOfModule extends AccountBaseModule
         $c->add("site.deleted", false);
 
         $mems = MemberPeer::instance()->select($c);
-        if (count($mems)>0) {
+        if ((is_countable($mems) ? count($mems) : 0)>0) {
             $runData->contextAdd("memberships", $mems);
         }
     }

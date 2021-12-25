@@ -25,7 +25,6 @@ class PMAction extends SmartyAction
     /**
      * Is the user logged in?
      * @param $runData
-     * @return bool
      * @throws WDPermissionException
      */
     public function isAllowed($runData): bool
@@ -46,7 +45,6 @@ class PMAction extends SmartyAction
 
     /**
      * Validate, authorize, and send a message.
-     * @param RunData $runData
      * @throws ProcessException
      * @throws WDPermissionException
      */
@@ -91,7 +89,6 @@ class PMAction extends SmartyAction
 
     /**
      * Save a draft.
-     * @param RunData $runData
      */
     public function saveDraftEvent(RunData $runData)
     {
@@ -113,7 +110,6 @@ class PMAction extends SmartyAction
 
     /**
      * Remove selected items from the user's inbox.
-     * @param RunData $runData
      */
     public function removeSelectedInboxEvent(RunData $runData)
     {
@@ -127,7 +123,6 @@ class PMAction extends SmartyAction
 
     /**
      * Remove a single item from the inbox and show the next one.
-     * @param RunData $runData
      */
     public function removeInboxMessageEvent(RunData $runData)
     {
@@ -152,7 +147,6 @@ class PMAction extends SmartyAction
 
     /**
      * Remove a single message from the Sent folder and display the next one.
-     * @param RunData $runData
      */
     public function removeSentMessageEvent(RunData $runData)
     {
@@ -177,7 +171,6 @@ class PMAction extends SmartyAction
 
     /**
      * Remove selected items from the user's Sent folder.
-     * @param RunData $runData
      */
     public function removeSelectedSentEvent(RunData $runData)
     {
@@ -191,7 +184,6 @@ class PMAction extends SmartyAction
 
     /**
      * Delete a single draft and present the next one to the user.
-     * @param RunData $runData
      */
     public function removeDraftsMessageEvent(RunData $runData)
     {
@@ -216,7 +208,6 @@ class PMAction extends SmartyAction
 
     /**
      * Remove multiple drafts from the user's folder.
-     * @param RunData $runData
      */
     public function removeSelectedDraftsEvent(RunData $runData)
     {

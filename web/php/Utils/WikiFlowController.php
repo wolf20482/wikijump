@@ -2,6 +2,7 @@
 
 namespace Wikidot\Utils;
 
+use MagpieRSS;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Ozone\Framework\Database\Criteria;
@@ -17,10 +18,11 @@ class WikiFlowController extends WebFlowController
 
     public function process()
     {
+        $glang = null;
         global $timeStart;
 
         // quick fix to prevent recursive RSS access by Wikijump itself.
-        if (strpos($_SERVER['HTTP_USER_AGENT'], 'MagpieRSS') !== false) {
+        if (str_contains($_SERVER['HTTP_USER_AGENT'], MagpieRSS::class)) {
             exit();
         }
 

@@ -16,7 +16,7 @@ class FilesEventBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='files_event';
-        $this->peerName = 'Wikidot\\DB\\FilesEventPeer';
+        $this->peerName = FilesEventPeer::class;
         $this->primaryKeyName = 'file_event_id';
         $this->fieldNames = array( 'file_event_id' ,  'filename' ,  'date' ,  'user_id' ,  'user_string' ,  'action' ,  'action_extra' );
 

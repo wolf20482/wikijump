@@ -43,7 +43,7 @@ class MembersListModule extends SmartyModule
         } else {
             $mems = MemberPeer::instance()->select($c);
         }
-        if (count($mems)>0) {
+        if ((is_countable($mems) ? count($mems) : 0)>0) {
             $runData->contextAdd("from", $from);
             $runData->contextAdd("memberships", $mems);
             $runData->contextAdd("showSince", $showSince);

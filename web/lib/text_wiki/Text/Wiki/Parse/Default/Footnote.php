@@ -53,7 +53,7 @@ class Text_Wiki_Parse_Footnote extends Text_Wiki_Parse {
     		if($this->wiki->vars['footnotes'] == null){
     			$this->wiki->vars['footnotes'] = array();
     		}
-    	 	$id = count($this->wiki->vars['footnotes'])+1;
+    	 	$id = (is_countable($this->wiki->vars['footnotes']) ? count($this->wiki->vars['footnotes']) : 0)+1;
    	 	//echo "dup[a]"
 
 	    	$content = trim($matches[1]);

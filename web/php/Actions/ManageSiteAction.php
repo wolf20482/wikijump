@@ -148,6 +148,8 @@ class ManageSiteAction extends SmartyAction
 
     public function customThemeSaveEvent($runData)
     {
+        $nameChanged = null;
+        $oldName = null;
         $pl =  $runData->getParameterList();
         $site = $runData->getTemp("site");
 
@@ -260,7 +262,7 @@ class ManageSiteAction extends SmartyAction
         $c->add("theme_id", $theme->getThemeId());
         $c->add("site_id", $site->getSiteId());
         $cats = CategoryPeer::instance()->select($c);
-        if (count($cats)>0) {
+        if ((is_countable($cats) ? count($cats) : 0)>0) {
             throw new ProcessException(_("This theme cannot be deleted because there are still pages that use it. Please check themes assigned to particular categories."), "can_not_delete");
         }
         // ok, delete now!

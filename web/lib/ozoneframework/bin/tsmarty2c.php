@@ -74,7 +74,7 @@ function do_file($file)
         $matches
 	);
 
-	for ($i=0; $i < count($matches[0]); $i++) {
+	for ($i=0; $i < (is_countable($matches[0]) ? count($matches[0]) : 0); $i++) {
 		// TODO: add line number
 		echo "/* $file */\n"; // credit: Mike van Lammeren 2005-02-14
 

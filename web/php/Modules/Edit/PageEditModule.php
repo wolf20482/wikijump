@@ -123,7 +123,7 @@ class PageEditModule extends SmartyModule
                     }
                 }
 
-                $secret = md5(time().rand(1000, 9999));
+                $secret = md5(time().random_int(1000, 9999));
                 $lock->setSecret($secret);
                 $lock->setSessionId($runData->getSession()->getSessionId());
                 $lock->save();
@@ -166,7 +166,7 @@ class PageEditModule extends SmartyModule
                 /* Has default template, try to populate the edit box with initial content. */
                 $templateSource = $templatePage->getSource();
                 $split = preg_split('/^={4,}$/sm', $templateSource);
-                if (count($split) >= 2) {
+                if ((is_countable($split) ? count($split) : 0) >= 2) {
                     /* Fine, there is some initial content. */
                     $templateSource = trim(preg_replace("/^.*?\n={4,}/s", '', $templateSource));
                 } else {
@@ -242,7 +242,7 @@ class PageEditModule extends SmartyModule
             }
         }
 
-        $secret = md5(time().rand(1000, 9999));
+        $secret = md5(time().random_int(1000, 9999));
         $lock->setSecret($secret);
         $lock->setSessionId($runData->getSession()->getSessionId());
         $lock->save();

@@ -12,9 +12,9 @@ class Deleter
 {
     private static $instance;
 
-    private $vars = array();
+    private array $vars = array();
 
-    private $recurrenceLevel = 0;
+    private int $recurrenceLevel = 0;
 
     public static function instance()
     {
@@ -51,7 +51,7 @@ class Deleter
         // ok, these are direct children. need to clear the perent_page_id field
 
         $descs = array();
-        while ($pages !== null && count($pages) > 0 && $rec < 10) {
+        while ($pages !== null && (is_countable($pages) ? count($pages) : 0) > 0 && $rec < 10) {
             $p2 = array();
             foreach ($pages as $p) {
                 $c = new Criteria();
@@ -103,7 +103,7 @@ class Deleter
             if ($count == 0) {
                 // delete the category
                 CategoryPeer::instance()->delete($c);
-                $outdater->categoryEvent('delete', $category, $site);
+                $outdater->categoryEvent('delete', $category);
             }
         }
 

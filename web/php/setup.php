@@ -14,7 +14,7 @@ if (!defined('WIKIJUMP_SETUP_COMPLETED')) {
 
     // determine WIKIJUMP_ROOT directory
     if (!defined('WIKIJUMP_ROOT')) {
-        define('WIKIJUMP_ROOT', dirname(dirname(__FILE__)));
+        define('WIKIJUMP_ROOT', dirname(__FILE__, 2));
         define('OZONE_ROOT', WIKIJUMP_ROOT.DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'ozoneframework');
     }
 

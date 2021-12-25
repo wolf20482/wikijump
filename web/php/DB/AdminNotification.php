@@ -21,6 +21,7 @@ class AdminNotification extends AdminNotificationBase
      */
     public function getTitle()
     {
+        $title = null;
         $type = $this->getType();
         switch ($type) {
             case 'NEW_MEMBER_APPLICATION':
@@ -71,6 +72,7 @@ class AdminNotification extends AdminNotificationBase
     public function getBody()
     {
 
+        $body = null;
         if (parent::getBody() != "") {
             return parent::getBody();
         }
@@ -117,6 +119,7 @@ class AdminNotification extends AdminNotificationBase
 
     public function getUrls()
     {
+        $urls = null;
         $type = $this->getType();
         $extra = $this->getExtra();
         if ($extra['urls']) {

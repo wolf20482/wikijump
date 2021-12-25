@@ -55,7 +55,7 @@ class Text_Wiki {
     	'Iftags',
         'Comment',
         'Iframe',
-    	'Date',
+    	Date::class,
         'Math',
         'Concatlines',
         'Freelink',
@@ -344,12 +344,12 @@ class Text_Wiki {
 
         $this->addPath(
             'parse',
-            $this->fixPath(dirname(__FILE__)) . 'Wiki/Parse/Default/'
+            $this->fixPath(__DIR__) . 'Wiki/Parse/Default/'
         );
 
         $this->addPath(
             'render',
-            $this->fixPath(dirname(__FILE__)) . 'Wiki/Render/'
+            $this->fixPath(__DIR__) . 'Wiki/Render/'
         );
 
     }
@@ -371,7 +371,7 @@ class Text_Wiki {
     *
     */
 
-    function setParseConf($rule, $arg1, $arg2 = null)
+    function setParseConf($rule, array|string $arg1, $arg2 = null)
     {
         $rule = ucwords(strtolower($rule));
 
@@ -448,7 +448,7 @@ class Text_Wiki {
     *
     */
 
-    function setRenderConf($rule, $arg1, $arg2 = null)
+    function setRenderConf($rule, array|string $arg1, $arg2 = null)
     {
         $rule = ucwords(strtolower($rule));
 
@@ -805,7 +805,7 @@ class Text_Wiki {
     *
     */
 
-    public function addToken($rule, array $options = [], bool $id_only = false)
+    public function addToken($rule, array $options = [], bool $id_only = false): int|string
     {
         // increment the token ID number.  note that if you parse
         // multiple times with the same Text_Wiki object, the ID number
@@ -1023,7 +1023,7 @@ class Text_Wiki {
     *
     */
 
-    function findFile($type, $file)
+    function findFile($type, $file): bool|string
     {
         // get the set of paths
         $set = $this->getPath($type);
@@ -1076,7 +1076,7 @@ class Text_Wiki {
     *
     */
 
-    function &error($message)
+    function &error($message): never
     {
     	throw new ProcessException($message);
     }

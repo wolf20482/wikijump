@@ -33,27 +33,27 @@ class RunData {
 	private $actionEvent;
 	private $nextAction;
 	private $nextActionEvent;
-	private $errorMessages = array ();
-	private $messages = array ();
+	private array $errorMessages = array ();
+	private array $messages = array ();
 	private $page;
 	private $cookies;
 	private $language;
 
 	private $session = null;
 
-	private $ajaxMode = false;
+	private bool $ajaxMode = false;
 	private $ajaxResponse;
 
 	private $requestUri;
 	private $requestMethod;
 
-	private $extra = array();
+	private array $extra = array();
 
-	private $formToolHttpProcessed = false;
+	private bool $formToolHttpProcessed = false;
 
 	private $temp; // temporary variables
 
-	private $_outCookies = array();
+	private array $_outCookies = array();
 
 	/**
 	 * Default constructor.
@@ -63,33 +63,29 @@ class RunData {
 	}
 
     /**
-     * Helper/shortcut methods for RunData:
-     */
-
-    /**
-     * Get the user ID of the calling user.
-     * @return int|null
-     */
-    public function id() : ?int
+				 * Helper/shortcut methods for RunData:
+				 */
+				/**
+				 * Get the user ID of the calling user.
+				 */
+				public function id() : ?int
     {
         return $this->getUserId();
     }
 
     /**
-     * Shortcut method to retrieve a value from a RunData object.
-     * @param string $key
-     * @return mixed
-     */
-    public function get(string $key)
+				 * Shortcut method to retrieve a value from a RunData object.
+				 * @return mixed
+				 */
+				public function get(string $key)
     {
         return $this->getParameterList()->getParameterValue($key);
     }
 
     /**
-     * Retrieve the calling User model.
-     * @return User|null
-     */
-    public function user(): ?User
+				 * Retrieve the calling User model.
+				 */
+				public function user(): ?User
     {
         return $this->getUser();
     }
@@ -363,6 +359,7 @@ class RunData {
 	 * Finds Class given the template name.
 	 */
 	private function findClass() {
+		$classFiles = [];
 		if(!$this->ajaxMode){
 		$classFilename = PathManager :: screenClass($this->screenTemplate);
 
@@ -414,7 +411,7 @@ class RunData {
 
 			$sessionId = UniqueStrings::random_string(60);
 			$cookieKey = GlobalProperties::$SESSION_COOKIE_NAME;
-			$this->_setCookie($cookieKey, $sessionId, time() + 10000000, "/", GlobalProperties::$SESSION_COOKIE_DOMAIN);
+			$this->_setCookie($cookieKey, $sessionId, time() + 10_000_000, "/", GlobalProperties::$SESSION_COOKIE_DOMAIN);
 			$session = new OzoneSession();
 
 			// set IP
@@ -451,7 +448,7 @@ class RunData {
 		}
 		if($removeCookie){
 			$cookieKey = GlobalProperties::$SESSION_COOKIE_NAME;
-			$this->_setCookie($cookieKey, 'dummy', time() - 10000000, "/", GlobalProperties::$SESSION_COOKIE_DOMAIN);
+			$this->_setCookie($cookieKey, 'dummy', time() - 10_000_000, "/", GlobalProperties::$SESSION_COOKIE_DOMAIN);
 		}
 	}
 
@@ -514,7 +511,7 @@ class RunData {
 		}
 		if(!$session){
 			// no session object, delete the cookie!
-			$this->_setCookie($cookieKey, $cookieSessionId, time() - 10000000, "/", GlobalProperties::$SESSION_COOKIE_DOMAIN);
+			$this->_setCookie($cookieKey, $cookieSessionId, time() - 10_000_000, "/", GlobalProperties::$SESSION_COOKIE_DOMAIN);
 			return;
 		}
 
@@ -579,7 +576,7 @@ class RunData {
 			$session = $this->session;
 			$serializedData = $session->getSerializedData();
 			if($serializedData === false) { $serializedData = []; }
-			if(!$this->getUser() && count($serializedData) == 0){
+			if(!$this->getUser() && (is_countable($serializedData) ? count($serializedData) : 0) == 0){
 				$this->sessionStop();
 			} else{
 				$date = new ODate();

@@ -48,6 +48,8 @@ class Text_Wiki_Render_Xhtml_Table extends Text_Wiki_Render {
 
     function token($options)
     {
+        $type = null;
+        $attr = null;
         // make nice variable names (type, attr, span)
         $span = $rowspan = 1;
         extract($options);

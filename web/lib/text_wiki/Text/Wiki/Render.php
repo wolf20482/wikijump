@@ -93,7 +93,7 @@ class Text_Wiki_Render {
         // get the config-key-name for this object,
         // strip the Text_Wiki_Render_ part
         //           01234567890123456
-        $tmp = get_class($this);
+        $tmp = $this::class;
         $tmp = substr($tmp, 17);
 
         // split into pieces at the _ mark.

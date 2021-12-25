@@ -14,6 +14,8 @@ class SearchAllModule extends SmartyModule
     public function build($runData)
     {
 
+        $tsprefix = null;
+        $pagerData = [];
         $pl = $runData->getParameterList();
         $query = trim($pl->getParameterValue("q"));
         $area = $pl->getParameterValue("a");
@@ -93,7 +95,7 @@ class SearchAllModule extends SmartyModule
 
         if ($res) {
             // fix urls
-            $counted = count($res);
+            $counted = is_countable($res) ? count($res) : 0;
 
             $pagerData = array();
             $pagerData['current_page'] = $pageNumber;
@@ -123,7 +125,7 @@ class SearchAllModule extends SmartyModule
         $runData->contextAdd("pagerData", $pagerData);
 
         $runData->contextAdd("results", $res);
-        $runData->contextAdd("countResults", count($res));
+        $runData->contextAdd("countResults", $res === null ? 0 : count($res));
         $runData->contextAdd("query", $query);
         $runData->contextAdd("encodedQuery", urldecode($query));
         $runData->contextAdd("queryEncoded", urlencode($query));

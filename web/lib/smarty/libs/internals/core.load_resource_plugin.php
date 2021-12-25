@@ -24,7 +24,7 @@ function smarty_core_load_resource_plugin($params, &$smarty)
 
     $_plugin = &$smarty->_plugins['resource'][$params['type']];
     if (isset($_plugin)) {
-        if (!$_plugin[1] && count($_plugin[0])) {
+        if (!$_plugin[1] && (is_countable($_plugin[0]) ? count($_plugin[0]) : 0)) {
             $_plugin[1] = true;
             foreach ($_plugin[0] as $_plugin_func) {
                 if (!is_callable($_plugin_func)) {

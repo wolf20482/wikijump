@@ -97,7 +97,7 @@ class If_Tag extends H2o_Node {
 class For_Tag extends H2o_Node {
     public $position;
     private $iteratable, $key, $item, $body, $else, $limit, $reversed;
-    private $syntax = '{
+    private string $syntax = '{
         ([a-zA-Z][a-zA-Z0-9-_]*)(?:,\s?([a-zA-Z][a-zA-Z0-9-_]*))?
         \s+in\s+
         ([a-zA-Z][a-zA-Z0-9-_]*(?:\.[a-zA-Z_0-9][a-zA-Z0-9_-]*)*)\s*   # Iteratable name
@@ -115,14 +115,14 @@ class For_Tag extends H2o_Node {
             $this->else = $parser->parse('endfor');
 
         $match = array_pad($match, 6, '');
-        list(,$this->key, $this->item, $this->iteratable, $this->limit, $this->reversed) = $match;
+        [, $this->key, $this->item, $this->iteratable, $this->limit, $this->reversed] = $match;
 
         if ($this->limit)
             $this->limit = (int) $this->limit;
 
         # Swap value if no key found
         if (!$this->item) {
-            list($this->key, $this->item) = array($this->item, $this->key);
+            [$this->key, $this->item] = array($this->item, $this->key);
         }
         $this->iteratable = symbol($this->iteratable);
         $this->reversed = (bool) $this->reversed;
@@ -137,7 +137,7 @@ class For_Tag extends H2o_Node {
         if ($this->limit)
             $iteratable = array_slice($iteratable, 0, $this->limit);
 
-        $length = count($iteratable);
+        $length = is_countable($iteratable) ? count($iteratable) : 0;
 
         if ($length) {
             $parent = $context['loop'];
@@ -174,11 +174,10 @@ class For_Tag extends H2o_Node {
 
 class Block_Tag extends H2o_Node {
     public $name;
-    public $position;
     public $stack;
-    private $syntax = '/^[a-zA-Z_][a-zA-Z0-9_-]*$/';
+    private string $syntax = '/^[a-zA-Z_][a-zA-Z0-9_-]*$/';
 
-    function __construct($argstring, $parser, $position) {
+    function __construct($argstring, $parser, public $position) {
         if (!preg_match($this->syntax, $argstring))
             throw new TemplateSyntaxError('Block tag expects a name, example: block [content]');
 
@@ -191,7 +190,6 @@ class Block_Tag extends H2o_Node {
         $this->stack = array($parser->parse('endblock', "endblock {$this->name}"));
 
         $parser->storage['blocks'][$this->name] = $this;
-        $this->position = $position;
     }
 
     function addLayer(&$nodelist) {
@@ -200,7 +198,7 @@ class Block_Tag extends H2o_Node {
     }
 
     function render($context, $stream, $index = 1) {
-        $key = count($this->stack) - $index;
+        $key = (is_countable($this->stack) ? count($this->stack) : 0) - $index;
 
         if (isset($this->stack[$key])) {
             $context->push();
@@ -215,7 +213,7 @@ class Extends_Tag extends H2o_Node {
     public $filename;
     public $position;
     public $nodelist;
-    private $syntax = '/^["\'](.*?)["\']$/';
+    private string $syntax = '/^["\'](.*?)["\']$/';
 
     function __construct($argstring, $parser, $position = 0) {
       if (!$parser->first)
@@ -274,8 +272,8 @@ class Extends_Tag extends H2o_Node {
  */
 class Include_Tag extends H2o_Node {
     private $nodelist;
-    private $syntax = '/^["\'](.*?)["\'](\s+with\s+(.+))?$/';
-    private $_additional_context = array();
+    private string $syntax = '/^["\'](.*?)["\'](\s+with\s+(.+))?$/';
+    private array $_additional_context = array();
 
     function __construct($argstring, $parser, $position = 0) {
         if (!preg_match($this->syntax, $argstring, $matches)) {
@@ -303,7 +301,7 @@ class Include_Tag extends H2o_Node {
 
     function render($context, $stream) {
         foreach ($this->_additional_context as $key => $value) {
-            if (strpos($value, '"') === false) {
+            if (!str_contains($value, '"')) {
                 // Context variable supplied as value. Needs to be resolved.
                 $value = $context->getVariable($value);
             } else {
@@ -320,14 +318,14 @@ class With_Tag extends H2o_Node {
     public $position;
     private $variable, $shortcut;
     private $nodelist;
-    private $syntax = '/^([\w]+(:?\.[\w\d]+)*)\s+as\s+([\w]+(:?\.[\w\d]+)?)$/';
+    private string $syntax = '/^([\w]+(:?\.[\w\d]+)*)\s+as\s+([\w]+(:?\.[\w\d]+)?)$/';
 
     function __construct($argstring, $parser, $position = 0) {
         if (!preg_match($this->syntax, $argstring, $matches))
             throw new TemplateSyntaxError('Invalid with tag syntax');
 
         # extract the long name and shortcut
-        list(,$this->variable, ,$this->shortcut) = $matches;
+        [, $this->variable, , $this->shortcut] = $matches;
         $this->nodelist = $parser->parse('endwith');
     }
 
@@ -347,7 +345,7 @@ class Cycle_Tag extends H2o_Node {
     function __construct($argstring, $parser, $pos) {
         $args = h2o_parser::parseArguments($argstring);
 
-        if (count($args) < 2) {
+        if ((is_countable($args) ? count($args) : 0) < 2) {
             throw new Exception('Cycle tag require more than two items');
         }
         $this->sequence = $args;
@@ -357,7 +355,7 @@ class Cycle_Tag extends H2o_Node {
     function render($context, $stream) {
         $item = $context->getVariable($this->uid);
         if ($item !== null) {
-            $item = ($item + 1) % count($this->sequence);
+            $item = ($item + 1) % (is_countable($this->sequence) ? count($this->sequence) : 0);
         } else {
             $item = 0;
         }
@@ -367,18 +365,16 @@ class Cycle_Tag extends H2o_Node {
 }
 
 class Load_Tag extends H2o_Node {
-    public $position;
-    private $searchpath = array(H2O_ROOT);
+    private array $searchpath = array(H2O_ROOT);
     private $extension;
 
-    function __construct($argstring, $parser, $pos = 0) {
+    function __construct($argstring, $parser, public $position = 0) {
         $this->extension = stripcslashes(preg_replace("/^[\"'](.*)[\"']$/", "$1", $argstring));
 
         if ($parser->runtime->searchpath)
             $this->appendPath($parser->runtime->searchpath);
 
         $parser->storage['included'][$this->extension] = $file = $this->load();
-        $this->position = $pos;
     }
 
     function render($context, $stream) {
@@ -407,9 +403,8 @@ class Load_Tag extends H2o_Node {
 }
 
 class Debug_Tag extends H2o_Node {
-    private $argument;
-    function __construct($argstring, $parser, $pos = 0) {
-        $this->argument = $argstring;
+    function __construct(private $argument, $parser, $pos = 0)
+    {
     }
 
     function render($context, $stream) {
@@ -472,11 +467,11 @@ class Csrf_token_Tag extends H2o_Node {
         else {
             global $SECRET_KEY;
             if (defined('SECRET_KEY'))
-                $token = md5(mt_rand() . SECRET_KEY);
+                $token = md5(random_int(0, mt_getrandmax()) . SECRET_KEY);
             else
-                $token = md5(mt_rand());
+                $token = md5(random_int(0, mt_getrandmax()));
         }
-        setcookie("csrftoken", $token, time()+60*60*24*365, "/");
+        setcookie("csrftoken", $token, ['expires' => time()+60*60*24*365, 'path' => "/"]);
         $stream->write("<div style='display:none'><input type=\"hidden\" value=\"$token\" name=\"csrfmiddlewaretoken\" /></div>");
     }
 }

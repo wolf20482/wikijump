@@ -21,7 +21,7 @@ class SendEmailDigestJob implements SchedulerJob
                 try {
                     $ds = new WDDigestSender();
                     $ds->handleUser($user);
-                } catch (Exception $e) {
+                } catch (Exception) {
                 }
             }
         });

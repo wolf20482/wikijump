@@ -33,7 +33,7 @@ class ForumDeletePostModule extends SmartyModule
         $category = $post->getForumThread()->getCategory();
         try {
             WDPermissionManager::instance()->hasForumPermission('moderate_forum', $runData->getUser(), $category);
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new WDPermissionException(_("Sorry, you are not allowed to delete posts. Only site administrators and moderators are the ones who can."));
         }
 

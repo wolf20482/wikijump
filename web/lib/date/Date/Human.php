@@ -103,6 +103,7 @@ class Date_Human
      */
     function gregorianToHuman($day=0, $month=0, $year=0)
     {
+        $dateinfo = [];
         /*
          * Check to see if any of the arguments are empty
          * If they are then populate the $dateinfo array

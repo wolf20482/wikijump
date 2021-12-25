@@ -29,6 +29,7 @@ abstract class WikidotController extends WebFlowController
      */
     protected function siteFromHost($siteHost, $customDomains = false, $uploadDomain = false)
     {
+        $site = null;
         if ($uploadDomain) {
             $regexp = "/^([a-zA-Z0-9\-]+)\.(" . GlobalProperties::$URL_DOMAIN_PREG . "|" . GlobalProperties::$URL_UPLOAD_DOMAIN_PREG . ")$/";
         } else {
@@ -89,7 +90,7 @@ abstract class WikidotController extends WebFlowController
 
     protected function isBuggyIeDamnYouBastard()
     {
-        if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false) {
+        if (isset($_SERVER['HTTP_USER_AGENT']) && str_contains($_SERVER['HTTP_USER_AGENT'], 'MSIE')) {
             return true;
         } else {
             return false;

@@ -19,7 +19,7 @@ class ManageSiteAdminsModule extends ManageSiteBaseModule
         $c->addOrderAscending("users.username");
 
         $mems = AdminPeer::instance()->select($c);
-        if (count($mems)>0) {
+        if ((is_countable($mems) ? count($mems) : 0)>0) {
             $runData->contextAdd("admins", $mems);
         }
     }

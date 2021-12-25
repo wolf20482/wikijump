@@ -17,7 +17,7 @@ class PageEditLock extends PageEditLockBase
     {
         $c = $this->getConflictsCriteria();
         $conflicts = PageEditLockPeer::instance()->select($c);
-        if (count($conflicts) == 0) {
+        if ((is_countable($conflicts) ? count($conflicts) : 0) == 0) {
             return null;
         } else {
             return $conflicts;

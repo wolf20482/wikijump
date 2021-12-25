@@ -37,7 +37,7 @@ class Text_Wiki_Render_Xhtml_Footnoteblock extends Text_Wiki_Render {
 
     function token($options) {
         $footnotes = $this->wiki->vars['footnotes'];
-        if (count($footnotes) == 0) {
+        if ((is_countable($footnotes) ? count($footnotes) : 0) == 0) {
             return '';
         } // render nothing if no footnotes.
         if ($options['type'] == 'start') {

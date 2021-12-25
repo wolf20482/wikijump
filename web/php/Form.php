@@ -55,7 +55,7 @@ class Form
                         $f['type'] == 'select';
                     }
                 }
-                if ($f['type'] == 'select' && (! isset($f['options']) || ! count($f['options']))) {
+                if ($f['type'] == 'select' && (! isset($f['options']) || ! (is_countable($f['options']) ? count($f['options']) : 0))) {
                     $f['type'] = 'text';
                 }
                 if (isset($f['default']) && $f['type'] == 'select') {

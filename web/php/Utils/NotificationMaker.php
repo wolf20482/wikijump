@@ -22,7 +22,6 @@ class NotificationMaker
 
     /**
      * Create a notification on a private message being sent.
-     * @param UserMessage $message
      */
     public function privateMessageNotification(UserMessage $message)
     {
@@ -88,6 +87,7 @@ class NotificationMaker
 
     public function addedToModerators($site, $user)
     {
+        $extra = [];
         // and create a notification too...
         $not = new Notification();
         $not->setUserId($user->id);
@@ -105,6 +105,7 @@ class NotificationMaker
 
     public function removedFromModerators($site, $user)
     {
+        $extra = [];
         // and create a notification too...
         $not = new Notification();
         $not->setUserId($user->id);
@@ -121,6 +122,7 @@ class NotificationMaker
 
     public function addedToAdmins($site, $user)
     {
+        $extra = [];
         // and create a notification too...
         $not = new Notification();
         $not->setUserId($user->id);
@@ -137,6 +139,7 @@ class NotificationMaker
 
     public function removedFromAdmins($site, $user)
     {
+        $extra = [];
         // and create a notification too...
         $not = new Notification();
         $not->setUserId($user->id);
@@ -153,6 +156,7 @@ class NotificationMaker
 
     public function membershipApplicationAccepted($site, $user)
     {
+        $extra = [];
         $not = new Notification();
         $not->setUserId($user->id);
         $not->setType('membership_application_accepted');
@@ -167,6 +171,7 @@ class NotificationMaker
     }
     public function membershipApplicationDeclined($site, $user)
     {
+        $extra = [];
         $not = new Notification();
         $not->setUserId($user->id);
         $not->setType('membership_application_declined');

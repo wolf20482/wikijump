@@ -19,6 +19,7 @@ class FeedFlowController extends WebFlowController
     public function process()
     {
 
+        $glang = null;
         // initialize logging service
         Ozone::init();
 
@@ -115,7 +116,7 @@ class FeedFlowController extends WebFlowController
             $password = $_SERVER['PHP_AUTH_PW'];
             $user = null;
             if ($username !== null && $password !== null) {
-                $user = SecurityManager::getUserByName($username);
+                $user = (new SecurityManager())->getUserByName($username);
                 if ($user) {
                     $upass = $user->password;
                     $upass = substr($upass, 0, 15);

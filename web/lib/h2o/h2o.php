@@ -1,7 +1,7 @@
 <?php
 define('H2O_VERSION', '0.3');
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
-defined('H2O_ROOT') or define('H2O_ROOT', dirname(__FILE__) . DS);
+defined('H2O_ROOT') or define('H2O_ROOT', __DIR__ . DS);
 
 require_once H2O_ROOT.'h2o/datatype.php';
 require_once H2O_ROOT.'h2o/loaders.php';
@@ -49,7 +49,7 @@ class H2o {
 
     function __construct($file = null, $options = array()) {
         # Init a environment
-        $this->options = $this->getOptions($options);
+        $this->options = static::getOptions($options);
         $loader = $this->options['loader'];
 
         if (!$loader)
@@ -99,7 +99,7 @@ class H2o {
         if (!$env)
             $env = $this->options;
 
-        if (!class_exists('H2o_Parser', false))
+        if (!class_exists(H2o_Parser::class, false))
             require_once H2O_ROOT.'h2o/parser.php';
 
         $parser = new H2o_Parser($source, $filename, $this, $env);
@@ -143,7 +143,7 @@ class H2o {
         return $instance;
     }
 
-    static function &createTag($tag, $args = null, $parser, $position = 0) {
+    static function &createTag($tag, $parser, $args = null, $position = 0) {
         if (!isset(self::$tags[$tag])) {
             throw new H2o_Error($tag . " tag doesn't exist");
         }
@@ -209,7 +209,7 @@ class H2o {
                 self::addFilter($key, $filter);
             }
             return true;
-        } elseif (is_string($filter) && class_exists($filter, false) && is_subclass_of($filter, 'FilterCollection')) {
+        } elseif (is_string($filter) && class_exists($filter, false) && is_subclass_of($filter, FilterCollection::class)) {
             foreach (get_class_methods($filter) as $f) {
                 if (is_callable(array($filter, $f)))
                     self::$filters[$f] = array($filter, $f);

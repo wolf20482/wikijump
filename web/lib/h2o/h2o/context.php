@@ -5,12 +5,12 @@
  *  encapsulate context, resolve name
  */
 class H2o_Context implements ArrayAccess {
-    public $safeClass = array('stdClass', 'BlockContext');
+    public $safeClass = array(stdClass::class, BlockContext::class);
     public $scopes;
     public $options;
     public $autoescape = true;
 
-    private $arrayMethods = array('first'=> 0, 'last'=> 1, 'length'=> 2, 'size'=> 3);
+    private array $arrayMethods = array('first'=> 0, 'last'=> 1, 'length'=> 2, 'size'=> 3);
     static $lookupTable = array();
 
     function __construct($context = array(), $options = array()){
@@ -98,7 +98,7 @@ class H2o_Context implements ArrayAccess {
         if ( is_array($var) ) {
 
             $name = array_shift($var);
-            $filters = isset($var['filters'])? $var['filters'] : array();
+            $filters = $var['filters'] ?? array();
 
         }
         else $name = $var;
@@ -147,10 +147,10 @@ class H2o_Context implements ArrayAccess {
                 if (isset($object[$part])) {
                     $object = $object[$part];
                 } elseif ($part === 'first') {
-                    $object = isset($object[0])?$object[0]:null;
+                    $object = $object[0] ?? null;
                 } elseif ($part === 'last') {
                     $last = count($object)-1;
-                    $object = isset($object[$last])?$object[$last]:null;
+                    $object = $object[$last] ?? null;
                 } elseif ($part === 'size' or $part === 'length') {
                     return count($object);
                 } else {
@@ -161,7 +161,7 @@ class H2o_Context implements ArrayAccess {
                 if (isset($object->$part))
                     $object = $object->$part;
                 elseif (is_callable(array($object, $part))) {
-                    $methodAllowed = in_array(get_class($object), $this->safeClass) ||
+                    $methodAllowed = in_array($object::class, $this->safeClass) ||
                         (isset($object->h2o_safe) && (
                             $object->h2o_safe === true || in_array($part, $object->h2o_safe)
                         )
@@ -234,14 +234,12 @@ class H2o_Context implements ArrayAccess {
     }
 }
 
-class BlockContext {
+class BlockContext implements Stringable {
     var $h2o_safe = array('name', 'depth', 'super');
     var $block, $index;
-    private $context;
 
-    function __construct($block, $context, $index) {
+    function __construct($block, private $context, $index) {
         $this->block =& $block;
-        $this->context = $context;
         $this->index = $index;
     }
 
@@ -259,8 +257,8 @@ class BlockContext {
         return $stream->close();
     }
 
-    function __toString() {
-        return "[BlockContext : {$this->block->name}, {$this->block->filename}]";
+    function __toString(): string {
+        return (string) "[BlockContext : {$this->block->name}, {$this->block->filename}]";
     }
 }
 ?>

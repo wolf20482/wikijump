@@ -25,7 +25,7 @@ class AccountApplicationsModule extends AccountBaseModule
         $c->add("site.deleted", false);
 
         $apps = MemberApplicationPeer::instance()->select($c);
-        if (count($apps)>0) {
+        if ((is_countable($apps) ? count($apps) : 0)>0) {
             $runData->contextAdd("applications", $apps);
         }
     }

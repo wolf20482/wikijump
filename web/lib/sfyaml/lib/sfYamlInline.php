@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-require_once dirname(__FILE__).'/sfYaml.php';
+require_once __DIR__.'/sfYaml.php';
 
 /**
  * sfYamlInline implements a YAML parser/dumper for the YAML inline syntax.
@@ -20,7 +20,7 @@ require_once dirname(__FILE__).'/sfYaml.php';
  */
 class sfYamlInline
 {
-  const REGEX_QUOTED_STRING = '(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\']*(?:\'\'[^\']*)*)\')';
+    public const REGEX_QUOTED_STRING = '(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\']*(?:\'\'[^\']*)*)\')';
 
   /**
    * Convert a YAML string to a PHP array.
@@ -44,17 +44,11 @@ class sfYamlInline
       mb_internal_encoding('ASCII');
     }
 
-    switch ($value[0])
-    {
-      case '[':
-        $result = self::parseSequence($value);
-        break;
-      case '{':
-        $result = self::parseMapping($value);
-        break;
-      default:
-        $result = self::parseScalar($value);
-    }
+    $result = match ($value[0]) {
+        '[' => self::parseSequence($value),
+        '{' => self::parseMapping($value),
+        default => self::parseScalar($value),
+    };
 
     if (isset($mbEncoding))
     {
@@ -102,7 +96,7 @@ class sfYamlInline
         return is_string($value) ? "'$value'" : (int) $value;
       case is_numeric($value):
         return is_infinite($value) ? str_ireplace('INF', '.Inf', strval($value)) : (is_string($value) ? "'$value'" : $value);
-      case false !== strpos($value, "\n") || false !== strpos($value, "\r"):
+      case str_contains($value, "\n") || str_contains($value, "\r"):
         return sprintf('"%s"', str_replace(array('"', "\n", "\r"), array('\\"', '\n', '\r'), $value));
       case preg_match('/[ \s \' " \: \{ \} \[ \] , & \* \# \?] | \A[ - ? | < > = ! % @ ` ]/x', $value):
         return sprintf("'%s'", str_replace('\'', '\'\'', $value));
@@ -135,7 +129,7 @@ class sfYamlInline
     if (
       (1 == count($keys) && '0' == $keys[0])
       ||
-      (count($keys) > 1 && array_reduce($keys, create_function('$v,$w', 'return (integer) $v + $w;'), 0) == count($keys) * (count($keys) - 1) / 2))
+      (count($keys) > 1 && array_reduce($keys, fn($v, $w) => (int) $v + $w, 0) == count($keys) * (count($keys) - 1) / 2))
     {
       $output = array();
       foreach ($value as $val)
@@ -159,7 +153,7 @@ class sfYamlInline
   /**
    * Parses a scalar to a YAML string.
    *
-   * @param scalar  $scalar
+   * @param string  $scalar
    * @param string  $delimiters
    * @param array   $stringDelimiter
    * @param integer $i
@@ -273,14 +267,14 @@ class sfYamlInline
           $isQuoted = in_array($sequence[$i], array('"', "'"));
           $value = self::parseScalar($sequence, array(',', ']'), array('"', "'"), $i);
 
-          if (!$isQuoted && false !== strpos($value, ': '))
+          if (!$isQuoted && str_contains($value, ': '))
           {
             // embedded mapping?
             try
             {
               $value = self::parseMapping('{'.$value.'}');
             }
-            catch (InvalidArgumentException $e)
+            catch (InvalidArgumentException)
             {
               // no, it's not
             }
@@ -392,11 +386,11 @@ class sfYamlInline
       case '' == $scalar:
       case '~' == $scalar:
         return null;
-      case 0 === strpos($scalar, '!str'):
+      case str_starts_with($scalar, '!str'):
         return (string) substr($scalar, 5);
-      case 0 === strpos($scalar, '! '):
+      case str_starts_with($scalar, '! '):
         return intval(self::parseScalar(substr($scalar, 2)));
-      case 0 === strpos($scalar, '!!php/object:'):
+      case str_starts_with($scalar, '!!php/object:'):
         return unserialize(substr($scalar, 13));
       case ctype_digit($scalar):
         $raw = $scalar;

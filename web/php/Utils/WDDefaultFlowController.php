@@ -18,6 +18,7 @@ class WDDefaultFlowController extends WebFlowController
 
     public function process()
     {
+        $glang = null;
         global $timeStart;
 
         // initialize logging service

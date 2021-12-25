@@ -31,6 +31,8 @@ class WatchedPageChangesFeed extends FeedScreen
     public function build($runData)
     {
 
+        $glang = null;
+        $channel = [];
         $user = $runData->getTemp("user");
         $userId = $user->id;
 

@@ -15,6 +15,7 @@ class WDDigestSender
     public function handleUser($user)
     {
 
+        $glang = null;
         $db = Database::connection();
         $db->begin();
 
@@ -25,12 +26,12 @@ class WDDigestSender
 
         $nots = NotificationPeer::instance()->select($c);
 
-        if (count($nots) == 0) {
+        if ((is_countable($nots) ? count($nots) : 0) == 0) {
             $db->commit();
             return;
         }
 
-        if (count($nots)>0) {
+        if ((is_countable($nots) ? count($nots) : 0)>0) {
             $q = "UPDATE notification SET notify_email=FALSE " .
                     "WHERE user_id='".$user->id."' AND " .
                     "notify_email = TRUE";

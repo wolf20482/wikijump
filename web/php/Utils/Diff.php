@@ -11,7 +11,7 @@ use Wikidot\Utils\WDStringUtils;
  */
 class Diff
 {
-    const INLINE_CONTEXT_LINES = 4;
+    public const INLINE_CONTEXT_LINES = 4;
 
     /**
      * Implementation of unified diff of two strings
@@ -48,10 +48,6 @@ class Diff
 
     /**
      * Generates a difference between two strings.
-     *
-     * @param string $fromString
-     * @param string $toString
-     * @return string
      */
     public static function generateStringDiff(string $fromString, string $toString, int $contextLines = 1, bool $minimal = true): string
     {
@@ -64,10 +60,6 @@ class Diff
 
     /**
      * Generates a nice inline diff.
-     *
-     * @param string $fromString
-     * @param string $toString
-     * @return string
      */
     public static function generateInlineStringDiff(string $fromString, string $toString): string
     {
@@ -82,22 +74,13 @@ class Diff
                 continue;
             }
 
-            switch ($d[0]) {
-                case ' ':
-                    $type = 'copy';
-                    break;
-                case '-':
-                    $type = 'delete';
-                    break;
-                case '+':
-                    $type = 'add';
-                    break;
-                case '@':
-                    $type = 'sep';
-                    break;
-                default:
-                    throw new ProcessException('Invalid line mode from diff: ' . $d[0]);
-            }
+            $type = match ($d[0]) {
+                ' ' => 'copy',
+                '-' => 'delete',
+                '+' => 'add',
+                '@' => 'sep',
+                default => throw new ProcessException('Invalid line mode from diff: ' . $d[0]),
+            };
             array_push($diffs, ['type' => $type, 'line' => substr($d, 1)]);
         }
 

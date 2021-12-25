@@ -370,7 +370,6 @@ class PHPMailer {
   function Send() {
     $header = '';
     $body = '';
-    $result = true;
 
     if((count($this->to) + count($this->cc) + count($this->bcc)) < 1) {
       $this->SetError($this->Lang('provide_address'));
@@ -391,24 +390,12 @@ class PHPMailer {
       return false;
     }
 
-    /* Choose the mailer */
-    switch($this->Mailer) {
-      case 'sendmail':
-        $result = $this->SendmailSend($header, $body);
-        break;
-      case 'smtp':
-        $result = $this->SmtpSend($header, $body);
-        break;
-      case 'mail':
-        $result = $this->MailSend($header, $body);
-        break;
-      default:
-        $result = $this->MailSend($header, $body);
-        break;
-        //$this->SetError($this->Mailer . $this->Lang('mailer_not_supported'));
-        //$result = false;
-        //break;
-    }
+    $result = match ($this->Mailer) {
+        'sendmail' => $this->SendmailSend($header, $body),
+        'smtp' => $this->SmtpSend($header, $body),
+        'mail' => $this->MailSend($header, $body),
+        default => $this->MailSend($header, $body),
+    };
 
     return $result;
   }
@@ -658,8 +645,8 @@ class PHPMailer {
   function AddrAppend($type, $addr) {
     $addr_str = $type . ': ';
     $addr_str .= $this->AddrFormat($addr[0]);
-    if(count($addr) > 1) {
-      for($i = 1; $i < count($addr); $i++) {
+    if((is_countable($addr) ? count($addr) : 0) > 1) {
+      for($i = 1; $i < (is_countable($addr) ? count($addr) : 0); $i++) {
         $addr_str .= ', ' . $this->AddrFormat($addr[$i]);
       }
     }
@@ -791,7 +778,7 @@ class PHPMailer {
     $this->boundary[1] = 'b1_' . $uniq_id;
     $this->boundary[2] = 'b2_' . $uniq_id;
 
-    $result .= $this->HeaderLine('Date', $this->RFCDate());
+    $result .= $this->HeaderLine(Date::class, $this->RFCDate());
     if($this->Sender == '') {
       $result .= $this->HeaderLine('Return-Path', trim($this->From));
     } else {
@@ -1041,6 +1028,8 @@ class PHPMailer {
    * @return string
    */
   function AttachAll() {
+    $string = null;
+    $path = null;
     /* Return text of body */
     $mime = array();
 
@@ -1208,10 +1197,9 @@ class PHPMailer {
     }
 
     /* Replace every high ascii, control and = characters */
-    $encoded = preg_replace_callback('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/',function($m) { return '='.sprintf('%02X', ord(stripslashes($m[1]))); }, $encoded);
+    $encoded = preg_replace_callback('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/',fn($m) => '='.sprintf('%02X', ord(stripslashes($m[1]))), $encoded);
     /* Replace every spaces and tabs when it's the last character on a line */
-    $encoded = preg_replace_callback("/([\011\040])".$this->LE."/", function($m) {
-      return '='.sprintf('%02X', ord((stripslashes($m[1]))).$this->LE);}
+    $encoded = preg_replace_callback("/([\011\040])".$this->LE."/", fn($m) => '='.sprintf('%02X', ord((stripslashes($m[1]))).$this->LE)
       , $encoded);
 
     /* Maximum line length of 76 characters before CRLF (74 + space + '=') */
@@ -1231,15 +1219,15 @@ class PHPMailer {
 
     switch (strtolower($position)) {
       case 'phrase':
-        $encoded = preg_replace("/([^A-Za-z0-9!*+\/ -])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
+        $encoded = preg_replace_callback('/([^A-Za-z0-9!*+\/ -])/', fn($matches) => '=' . sprintf('%02X', ord($matches[1])), $encoded);
         break;
       case 'comment':
-        $encoded = preg_replace("/([\(\)\"])/e", "'='.sprintf('%02X', ord('\\1'))", $encoded);
+        $encoded = preg_replace_callback('/([\(\)"])/', fn($matches) => '=' . sprintf('%02X', ord($matches[1])), $encoded);
       case 'text':
       default:
         /* Replace every high ascii, control =, ? and _ characters */
-        $encoded = preg_replace('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/e',
-              "'='.sprintf('%02X', ord('\\1'))", $encoded);
+        $encoded = preg_replace_callback('/([\000-\011\013\014\016-\037\075\077\137\177-\377])/',
+              fn($matches) => '=' . sprintf('%02X', ord($matches[1])), $encoded);
         break;
     }
 
@@ -1430,13 +1418,13 @@ class PHPMailer {
    * @return mixed
    */
   function ServerVar($varName) {
-    global $HTTP_SERVER_VARS;
-    global $HTTP_ENV_VARS;
+    global $_SERVER;
+    global $_ENV;
 
     if(!isset($_SERVER)) {
-      $_SERVER = $HTTP_SERVER_VARS;
+      $_SERVER = $_SERVER;
       if(!isset($_SERVER['REMOTE_ADDR'])) {
-        $_SERVER = $HTTP_ENV_VARS; // must be Apache
+        $_SERVER = $_ENV; // must be Apache
       }
     }
 

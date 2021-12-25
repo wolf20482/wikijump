@@ -17,7 +17,7 @@ class DomainRedirectPeerBase extends BaseDBPeer
     protected function internalInit()
     {
         $this->tableName='domain_redirect';
-        $this->objectName='Wikidot\\DB\\DomainRedirect';
+        $this->objectName=DomainRedirect::class;
         $this->primaryKeyName = 'redirect_id';
         $this->fieldNames = array( 'redirect_id' ,  'site_id' ,  'url' );
         $this->fieldTypes = array( 'redirect_id' => 'serial',  'site_id' => 'int',  'url' => 'varchar(80)');
@@ -27,7 +27,7 @@ class DomainRedirectPeerBase extends BaseDBPeer
     public static function instance()
     {
         if (self::$peerInstance == null) {
-            $className = 'Wikidot\\DB\\DomainRedirectPeer';
+            $className = DomainRedirectPeer::class;
             self::$peerInstance = new $className();
         }
         return self::$peerInstance;

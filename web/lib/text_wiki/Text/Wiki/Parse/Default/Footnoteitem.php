@@ -45,6 +45,7 @@ class Text_Wiki_Parse_Footnoteitem extends Text_Wiki_Parse {
     function process(&$matches)
     {
 
+        $options = null;
         return $this->wiki->addToken($this->rule, $options);
     }
 }

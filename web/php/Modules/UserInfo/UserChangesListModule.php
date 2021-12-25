@@ -15,6 +15,7 @@ class UserChangesListModule extends SmartyLocalizedModule
 
     public function build($runData)
     {
+        $o = [];
         // select recent revisions...
 
         $site = $runData->getTemp("site");
@@ -39,7 +40,7 @@ class UserChangesListModule extends SmartyLocalizedModule
         }
 
         if ($op) {
-            $o = json_decode($op, true);
+            $o = json_decode($op, true, 512, JSON_THROW_ON_ERROR);
             if (is_countable($o) == false) {
                 $o['all'] == true;
             }
@@ -90,7 +91,7 @@ class UserChangesListModule extends SmartyLocalizedModule
         $c->setLimit($count, $offset);
         $revisions = PageRevisionPeer::instance()->select($c);
 
-        $counted = count($revisions);
+        $counted = is_countable($revisions) ? count($revisions) : 0;
         $pagerData = array();
         $pagerData['currentPage'] = $pageNumber;
         if ($counted >$perPage*2) {

@@ -20,7 +20,7 @@ class ManageSiteIpBlocksModule extends ManageSiteBaseModule
         $c->addOrderDescending("block_id");
 
         $blocks = IpBlockPeer::instance()->select($c);
-        if (count($blocks)>0) {
+        if ((is_countable($blocks) ? count($blocks) : 0)>0) {
             $runData->contextAdd("blocks", $blocks);
         }
     }

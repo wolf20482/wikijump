@@ -21,6 +21,10 @@ class ForumNewPostFormModule extends SmartyModule
     public function build($runData)
     {
 
+        $rel = null;
+        $c = null;
+        $parentId = null;
+        $parentChanged = null;
         $pl = $runData->getParameterList();
         $postId = $pl->getParameterValue("postId");
         $threadId = $pl->getParameterValue("threadId");

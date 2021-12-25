@@ -52,7 +52,7 @@ class PagesFeed extends FeedScreen
             }
         }
 
-        if (count($cats) == 0) {
+        if ((is_countable($cats) ? count($cats) : 0) == 0) {
             $akey = 'pageall_lc..'.$site->getUnixName();
             $allPagesTimestamp = Cache::get($akey);
             if ($allPagesTimestamp && $cacheTimestamp && $allPagesTimestamp <= $cacheTimestamp) {
@@ -264,10 +264,10 @@ class PagesFeed extends FeedScreen
             case 'titleAsc':
                 $c->addOrderAscending("COALESCE(title, unix_name)");
                 break;
-            default:
             case 'dateCreatedDesc':
                 $c->addOrderDescending('page_id');
                 break;
+            default:
         }
 
         $pages = PagePeer::instance()->select($c);

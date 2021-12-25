@@ -43,7 +43,7 @@ if (!function_exists('spyc_dump')) {
     }
 }
 
-if (!class_exists('Spyc')) {
+if (!class_exists(Spyc::class)) {
 
     /**
      * The Simple PHP YAML Class.
@@ -71,7 +71,7 @@ if (!class_exists('Spyc')) {
 
         // SETTINGS
 
-        const REMPTY = "\0\0\0\0\0";
+        public const REMPTY = "\0\0\0\0\0";
 
         /**
          * Setting this to true will force YAMLDump to enclose any string value in
@@ -102,18 +102,17 @@ if (!class_exists('Spyc')) {
          */
         private $_dumpIndent;
         private $_dumpWordWrap;
-        private $_containsGroupAnchor = false;
-        private $_containsGroupAlias = false;
+        private bool $_containsGroupAnchor = false;
+        private bool $_containsGroupAlias = false;
         private $path;
         private $result;
-        private $LiteralPlaceHolder = '___YAML_Literal_Block___';
-        private $SavedGroups = array();
+        private string $LiteralPlaceHolder = '___YAML_Literal_Block___';
+        private array $SavedGroups = array();
         private $indent;
         /**
          * Path modifier that should be applied after adding current element.
-         * @var array
          */
-        private $delayedPath = array();
+        private array $delayedPath = array();
 
         /**#@+
          * @access public
@@ -211,12 +210,12 @@ if (!class_exists('Spyc')) {
          *
          * @access public
          * @return string
-         * @param array|\stdClass $array PHP array
+         * @param array|stdClass $array PHP array
          * @param int $indent Pass in false to use the default, which is 2
          * @param int $wordwrap Pass in 0 for no wordwrap, false for default (40)
          * @param bool $no_opening_dashes Do not start YAML file with "---\n"
          */
-        public static function YAMLDump($array, $indent = false, $wordwrap = false, $no_opening_dashes = false) {
+        public static function YAMLDump(array|stdClass $array, $indent = false, $wordwrap = false, $no_opening_dashes = false) {
             $spyc = new Spyc;
             return $spyc->dump($array, $indent, $wordwrap, $no_opening_dashes);
         }
@@ -285,6 +284,7 @@ if (!class_exists('Spyc')) {
          * @param $indent mixed The indent of the current node
          */
         private function _yamlize($key,$value,$indent, $previous_key = -1, $first_key = 0, $source_array = null) {
+            $string = null;
             if(is_object($value)) $value = (array)$value;
             if (is_array($value)) {
                 if (empty ($value))
@@ -335,9 +335,9 @@ if (!class_exists('Spyc')) {
          */
         private function _dumpNode($key, $value, $indent, $previous_key = -1, $first_key = 0, $source_array = null) {
             // do some folding here, for blocks
-            if (is_string ($value) && ((strpos($value,"\n") !== false || strpos($value,": ") !== false || strpos($value,"- ") !== false ||
-                        strpos($value,"*") !== false || strpos($value,"#") !== false || strpos($value,"<") !== false || strpos($value,">") !== false || strpos ($value, '%') !== false || strpos ($value, '  ') !== false ||
-                        strpos($value,"[") !== false || strpos($value,"]") !== false || strpos($value,"{") !== false || strpos($value,"}") !== false) || strpos($value,"&") !== false || strpos($value, "'") !== false || strpos($value, "!") === 0 ||
+            if (is_string ($value) && ((str_contains($value,"\n") || str_contains($value,": ") || str_contains($value,"- ") ||
+                        str_contains($value,"*") || str_contains($value,"#") || str_contains($value,"<") || str_contains($value,">") || str_contains ($value, '%') || str_contains ($value, '  ') ||
+                        str_contains($value,"[") || str_contains($value,"]") || str_contains($value,"{") || str_contains($value,"}")) || str_contains($value,"&") || str_contains($value, "'") || str_starts_with($value, "!") ||
                     substr ($value, -1, 1) == ':')
             ) {
                 $value = $this->_doLiteralBlock($value,$indent);
@@ -369,7 +369,7 @@ if (!class_exists('Spyc')) {
             } else {
                 // if ($first_key===0)  throw new Exception('Keys are all screwy.  The first one was zero, now it\'s "'. $key .'"');
                 // It's mapped
-                if (strpos($key, ":") !== false || strpos($key, "#") !== false) { $key = '"' . $key . '"'; }
+                if (str_contains($key, ":") || str_contains($key, "#")) { $key = '"' . $key . '"'; }
                 $string = rtrim ($spaces.$key.': '.$value)."\n";
             }
             return $string;
@@ -384,10 +384,10 @@ if (!class_exists('Spyc')) {
          */
         private function _doLiteralBlock($value,$indent) {
             if ($value === "\n") return '\n';
-            if (strpos($value, "\n") === false && strpos($value, "'") === false) {
+            if (!str_contains($value, "\n") && !str_contains($value, "'")) {
                 return sprintf ("'%s'", $value);
             }
-            if (strpos($value, "\n") === false && strpos($value, '"') === false) {
+            if (!str_contains($value, "\n") && !str_contains($value, '"')) {
                 return sprintf ('"%s"', $value);
             }
             $exploded = explode("\n",$value);
@@ -400,7 +400,7 @@ if (!class_exists('Spyc')) {
             $spaces   = str_repeat(' ',$indent);
             foreach ($exploded as $line) {
                 $line = trim($line);
-                if (strpos($line, '"') === 0 && strrpos($line, '"') == (strlen($line)-1) || strpos($line, "'") === 0 && strrpos($line, "'") == (strlen($line)-1)) {
+                if (str_starts_with($line, '"') && strrpos($line, '"') == (strlen($line)-1) || str_starts_with($line, "'") && strrpos($line, "'") == (strlen($line)-1)) {
                     $line = substr($line, 1, -1);
                 }
                 $newValue .= "\n" . $spaces . ($line);
@@ -500,6 +500,7 @@ if (!class_exists('Spyc')) {
         }
 
         private function loadWithSource($Source) {
+            $literalBlock = null;
             if (empty ($Source)) return array();
             if ($this->setting_use_syck_is_possible && function_exists ('syck_load')) {
                 $array = syck_load (implode ("\n", $Source));
@@ -509,7 +510,7 @@ if (!class_exists('Spyc')) {
             $this->path = array();
             $this->result = array();
 
-            $cnt = count($Source);
+            $cnt = is_countable($Source) ? count($Source) : 0;
             for ($i = 0; $i < $cnt; $i++) {
                 $line = $Source[$i];
 
@@ -559,7 +560,7 @@ if (!class_exists('Spyc')) {
         }
 
         private function loadFromSource ($input) {
-            if (!empty($input) && strpos($input, "\n") === false && file_exists($input))
+            if (!empty($input) && !str_contains($input, "\n") && file_exists($input))
                 $input = file_get_contents($input);
 
             return $this->loadFromString($input);
@@ -641,7 +642,7 @@ if (!class_exists('Spyc')) {
                 return strtr(substr ($value, 1, -1), array ('\\"' => '"', '\\\''=> '\''));
             }
 
-            if (strpos($value, ' #') !== false && !$is_quoted)
+            if (str_contains($value, ' #') && !$is_quoted)
                 $value = preg_replace('/\s+#(.+)$/','',$value);
 
             if ($first_character == '[' && $last_character == ']') {
@@ -657,7 +658,7 @@ if (!class_exists('Spyc')) {
                 return $value;
             }
 
-            if (strpos($value,': ')!==false && $first_character != '{') {
+            if (str_contains($value,': ') && $first_character != '{') {
                 $array = explode(': ',$value);
                 $key   = trim($array[0]);
                 array_shift($array);
@@ -764,7 +765,7 @@ if (!class_exists('Spyc')) {
 
                 if ($i++ >= 10) break;
 
-            } while (strpos ($inline, '[') !== false || strpos ($inline, '{') !== false);
+            } while (str_contains ($inline, '[') || str_contains ($inline, '{'));
 
             $explode = explode(',',$inline);
             $explode = array_map('trim', $explode);
@@ -775,7 +776,7 @@ if (!class_exists('Spyc')) {
                 // Re-add the sequences
                 if (!empty($seqs)) {
                     foreach ($explode as $key => $value) {
-                        if (strpos($value,'YAMLSeq') !== false) {
+                        if (str_contains($value,'YAMLSeq')) {
                             foreach ($seqs as $seqk => $seq) {
                                 $explode[$key] = str_replace(('YAMLSeq'.$seqk.'s'),$seq,$value);
                                 $value = $explode[$key];
@@ -787,7 +788,7 @@ if (!class_exists('Spyc')) {
                 // Re-add the mappings
                 if (!empty($maps)) {
                     foreach ($explode as $key => $value) {
-                        if (strpos($value,'YAMLMap') !== false) {
+                        if (str_contains($value,'YAMLMap')) {
                             foreach ($maps as $mapk => $map) {
                                 $explode[$key] = str_replace(('YAMLMap'.$mapk.'s'), $map, $value);
                                 $value = $explode[$key];
@@ -800,7 +801,7 @@ if (!class_exists('Spyc')) {
                 // Re-add the strings
                 if (!empty($saved_strings)) {
                     foreach ($explode as $key => $value) {
-                        while (strpos($value,'YAMLString') !== false) {
+                        while (str_contains($value,'YAMLString')) {
                             $explode[$key] = preg_replace('/YAMLString/',$saved_strings[$stringi],$value, 1);
                             unset($saved_strings[$stringi]);
                             ++$stringi;
@@ -813,7 +814,7 @@ if (!class_exists('Spyc')) {
                 // Re-add the empties
                 if (!empty($saved_empties)) {
                     foreach ($explode as $key => $value) {
-                        while (strpos($value,'YAMLEmpty') !== false) {
+                        while (str_contains($value,'YAMLEmpty')) {
                             $explode[$key] = preg_replace('/YAMLEmpty/', '', $value, 1);
                             $value = $explode[$key];
                         }
@@ -822,16 +823,16 @@ if (!class_exists('Spyc')) {
 
                 $finished = true;
                 foreach ($explode as $key => $value) {
-                    if (strpos($value,'YAMLSeq') !== false) {
+                    if (str_contains($value,'YAMLSeq')) {
                         $finished = false; break;
                     }
-                    if (strpos($value,'YAMLMap') !== false) {
+                    if (str_contains($value,'YAMLMap')) {
                         $finished = false; break;
                     }
-                    if (strpos($value,'YAMLString') !== false) {
+                    if (str_contains($value,'YAMLString')) {
                         $finished = false; break;
                     }
-                    if (strpos($value,'YAMLEmpty') !== false) {
+                    if (str_contains($value,'YAMLEmpty')) {
                         $finished = false; break;
                     }
                 }
@@ -853,6 +854,7 @@ if (!class_exists('Spyc')) {
         }
 
         private function referenceContentsByAlias ($alias) {
+            $value = [];
             do {
                 if (!isset($this->SavedGroups[$alias])) { echo "Bad group name: $alias."; break; }
                 $groupPath = $this->SavedGroups[$alias];
@@ -879,18 +881,18 @@ if (!class_exists('Spyc')) {
 
             // print_r ($incoming_data);
 
-            if (count ($incoming_data) > 1)
+            if ((is_countable($incoming_data) ? count ($incoming_data) : 0) > 1)
                 return $this->addArrayInline ($incoming_data, $incoming_indent);
 
             $key = key ($incoming_data);
-            $value = isset($incoming_data[$key]) ? $incoming_data[$key] : null;
+            $value = $incoming_data[$key] ?? null;
             if ($key === '__!YAMLZero') $key = '0';
 
             if ($incoming_indent == 0 && !$this->_containsGroupAlias && !$this->_containsGroupAnchor) { // Shortcut for root-level values.
                 if ($key || $key === '' || $key === '0') {
                     $this->result[$key] = $value;
                 } else {
-                    $this->result[] = $value; end ($this->result); $key = key ($this->result);
+                    $this->result[] = $value; $key = array_key_last ($this->result);
                 }
                 $this->path[$incoming_indent] = $key;
                 return;
@@ -923,7 +925,7 @@ if (!class_exists('Spyc')) {
                     $_arr[$key] = $value;
             } else {
                 if (!is_array ($_arr)) { $_arr = array ($value); $key = 0; }
-                else { $_arr[] = $value; end ($_arr); $key = key ($_arr); }
+                else { $_arr[] = $value; $key = array_key_last ($_arr); }
             }
 
             $reverse_path = array_reverse($this->path);
@@ -1006,7 +1008,7 @@ if (!class_exists('Spyc')) {
             if ($indent == 0) return array();
             $linePath = $this->path;
             do {
-                end($linePath); $lastIndentInParentPath = key($linePath);
+                $lastIndentInParentPath = array_key_last($linePath);
                 if ($indent <= $lastIndentInParentPath) array_pop ($linePath);
             } while ($indent <= $lastIndentInParentPath);
             return $linePath;
@@ -1075,12 +1077,12 @@ if (!class_exists('Spyc')) {
             $array = array();
             $key         = self::unquote(trim(substr($line,1,-1)));
             $array[$key] = array();
-            $this->delayedPath = array(strpos ($line, $key) + $this->indent => $key);
+            $this->delayedPath = array(strpos ($line, (string) $key) + $this->indent => $key);
             return array($array);
         }
 
         private function checkKeysInValue($value) {
-            if (strchr('[{"\'', $value[0]) === false) {
+            if (strchr('[{"\'', (string) $value[0]) === false) {
                 if (strchr($value, ': ') !== false) {
                     throw new Exception('Too many keys: '.$value);
                 }
@@ -1151,7 +1153,7 @@ if (!class_exists('Spyc')) {
 
         private function nodeContainsGroup ($line) {
             $symbolsForReference = 'A-z0-9_\-';
-            if (strpos($line, '&') === false && strpos($line, '*') === false) return false; // Please die fast ;-)
+            if (!str_contains($line, '&') && !str_contains($line, '*')) return false; // Please die fast ;-)
             if ($line[0] == '&' && preg_match('/^(&['.$symbolsForReference.']+)/', $line, $matches)) return $matches[1];
             if ($line[0] == '*' && preg_match('/^(\*['.$symbolsForReference.']+)/', $line, $matches)) return $matches[1];
             if (preg_match('/(&['.$symbolsForReference.']+)$/', $line, $matches)) return $matches[1];
@@ -1180,7 +1182,7 @@ if (!class_exists('Spyc')) {
 do {
     if (PHP_SAPI != 'cli') break;
     if (empty ($_SERVER['argc']) || $_SERVER['argc'] < 2) break;
-    if (empty ($_SERVER['PHP_SELF']) || FALSE === strpos ($_SERVER['PHP_SELF'], 'Spyc.php') ) break;
+    if (empty ($_SERVER['PHP_SELF']) || !str_contains ($_SERVER['PHP_SELF'], 'Spyc.php') ) break;
     $file = $argv[1];
-    echo json_encode (spyc_load_file ($file));
+    echo json_encode (spyc_load_file ($file), JSON_THROW_ON_ERROR);
 } while (0);

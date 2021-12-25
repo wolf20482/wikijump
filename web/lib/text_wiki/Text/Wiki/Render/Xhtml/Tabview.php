@@ -50,7 +50,7 @@ EOT;
                 if ($tab['tabId'] == 0) {
                     $class = ' class="selected"';
                 }
-                $out .= '<li' . $class . '><a href="javascript:;"><em>' . ($tab['title'] ? $tab['title'] : 'untitled') . '</em></a></li>';
+                $out .= '<li' . $class . '><a href="javascript:;"><em>' . ($tab['title'] ?: 'untitled') . '</em></a></li>';
 
             }
             $out .= '</ul>';

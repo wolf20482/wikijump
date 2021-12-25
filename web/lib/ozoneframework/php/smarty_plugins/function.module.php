@@ -5,6 +5,7 @@
  * Module placeholder generator for Smarty.
  */
 function smarty_function_module($params, & $smarty) {
+	$parmstring = null;
 	if($params['name'] == '') {
 		$smarty->trigger_error("module: missing attribute 'name' for the macro");
 		return;

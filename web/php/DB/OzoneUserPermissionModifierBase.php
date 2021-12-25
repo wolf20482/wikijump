@@ -18,7 +18,7 @@ class OzoneUserPermissionModifierBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='ozone_user_permission_modifier';
-        $this->peerName = 'Wikidot\\DB\\OzoneUserPermissionModifierPeer';
+        $this->peerName = OzoneUserPermissionModifierPeer::class;
         $this->primaryKeyName = 'user_permission_id';
         $this->fieldNames = array( 'user_permission_id' ,  'user_id' ,  'permission_id' ,  'modifier' );
 
@@ -65,7 +65,7 @@ class OzoneUserPermissionModifierBase extends BaseDBObject
                 }
             }
         }
-                $foreignPeerClassName = 'Wikidot\\DB\\OzonePermissionPeer';
+                $foreignPeerClassName = OzonePermissionPeer::class;
                 $fpeer = new $foreignPeerClassName();
 
                 $criteria = new Criteria();

@@ -22,7 +22,7 @@ class UserInfoAdminOfModule extends SmartyLocalizedModule
         $c->addOrderAscending("site.name");
 
         $mems = AdminPeer::instance()->select($c);
-        if (count($mems)>0) {
+        if ((is_countable($mems) ? count($mems) : 0)>0) {
             $runData->contextAdd("memberships", $mems);
         }
     }

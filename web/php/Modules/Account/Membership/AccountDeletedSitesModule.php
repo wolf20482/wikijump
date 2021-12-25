@@ -25,7 +25,7 @@ class AccountDeletedSitesModule extends AccountBaseModule
         $c->add("site.deleted", true);
 
         $mems = AdminPeer::instance()->select($c);
-        if (count($mems)>0) {
+        if ((is_countable($mems) ? count($mems) : 0)>0) {
             $runData->contextAdd("admins", $mems);
         }
 

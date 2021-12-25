@@ -83,7 +83,7 @@ class PageRevisionListModule extends SmartyModule
         $c->add('page_id', $pageId);
 
         // check options
-        if (!$o['all'] && count($o)>0) {
+        if (!$o['all'] && (is_countable($o) ? count($o) : 0)>0) {
             $c2 = new Criteria();
             if ($o['new']) {
                 $c2->addOr("flag_new", true);
@@ -115,7 +115,7 @@ class PageRevisionListModule extends SmartyModule
 
         // now see if number of selected is equal $perPage + 1. If so -
         // there is at least 1 more page to show...
-        $counted = count($pr);
+        $counted = is_countable($pr) ? count($pr) : 0;
         $pagerData = array();
         $pagerData['current_page'] = $pageNumber;
 

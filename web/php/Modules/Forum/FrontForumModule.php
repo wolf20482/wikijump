@@ -21,7 +21,7 @@ class FrontForumModule extends SmartyModule
 {
 
     protected $processPage = true;
-    private $vars = array();
+    private array $vars = array();
 
     public function render($runData)
     {

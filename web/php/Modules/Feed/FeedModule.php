@@ -21,6 +21,7 @@ class FeedModule extends CacheableModule
 
     public function build($runData)
     {
+        $rss = null;
         $pl = $runData->getParameterList();
         $src = $pl->getParameterValue("src", "MODULE");
         $limit =  $pl->getParameterValue("limit", "MODULE");
@@ -32,7 +33,7 @@ class FeedModule extends CacheableModule
 
         $feedArray = array();
 
-        if (strpos($src, ';')!==false) {
+        if (str_contains($src, ';')) {
             // multiple sources!!!
 
             $itemArray = array();
@@ -48,7 +49,7 @@ class FeedModule extends CacheableModule
                     $rss = $mrss->fetch($url);
                     $items = $rss->items;
                     $feedIdx = array_push($feedArray, $rss)-1;
-                    for ($i=0; $i<count($items); $i++) {
+                    for ($i=0; $i<(is_countable($items) ? count($items) : 0); $i++) {
                         $items[$i]['feed_idx'] = $feedIdx;
                     }
                     $itemArray = array_merge($itemArray, $items);
@@ -84,7 +85,7 @@ class FeedModule extends CacheableModule
 
             $items= $rss->items;
             $feedIdx = array_push($feedArray, $rss);
-            for ($i=0; $i<count($items); $i++) {
+            for ($i=0; $i<(is_countable($items) ? count($items) : 0); $i++) {
                 $items[$i]['feedl_idx'] = $feedIdx;
             }
             $itemArray = $items;
@@ -227,7 +228,7 @@ class FeedModule extends CacheableModule
             // refers to the feed root
             $key = str_replace(":", "/", $key);
             ;
-            list($dummy, $key1, $key2, $key3) = explode("/", $key);
+            [$dummy, $key1, $key2, $key3] = explode("/", $key);
             if ($key2 === null) {
                 return  $feed->$key1;
             } elseif ($key3 === null) {
@@ -241,7 +242,7 @@ class FeedModule extends CacheableModule
         // format it!
         $key = preg_replace("/\/([a-z0-9]+:)?/i", "_", $key);
 
-        list($key1, $key2) = explode(":", $key);
+        [$key1, $key2] = explode(":", $key);
 
         if ($key2 == null) {
             return trim($item[$key1]);

@@ -23,7 +23,7 @@ function smarty_function_counter($params, &$smarty)
 {
     static $counters = array();
 
-    $name = (isset($params['name'])) ? $params['name'] : 'default';
+    $name = $params['name'] ?? 'default';
     if (!isset($counters[$name])) {
         $counters[$name] = array(
             'start'=>1,

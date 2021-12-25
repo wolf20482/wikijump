@@ -30,6 +30,7 @@ class SiteChangesFeed extends FeedScreen
     public function build($runData)
     {
 
+        $channel = [];
         $site = $runData->getTemp("site");
 
         $c = new Criteria();

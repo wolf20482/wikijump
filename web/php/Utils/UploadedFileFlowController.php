@@ -66,8 +66,9 @@ class UploadedFileFlowController extends WikidotController
         if (! $site->getPrivate()) { // site is public
             return true;
         }
+        $explode = explode("/", $file);
 
-        $dir = array_shift(explode("/", $file));
+        $dir = array_shift($explode);
         if (! in_array($dir, self::$RESTRICTED_AREAS)) {
             return true;
         }

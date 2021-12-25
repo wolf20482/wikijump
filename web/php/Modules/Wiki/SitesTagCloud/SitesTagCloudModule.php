@@ -14,6 +14,7 @@ class SitesTagCloudModule extends CacheableModule
     public function build($runData)
     {
 
+        $ql = null;
         $pl = $runData->getParameterList();
         $lang = $pl->getParameterValue("lang");
 
@@ -51,7 +52,7 @@ class SitesTagCloudModule extends CacheableModule
         $sizeSmall = 25; // percent
         $sizeBig = 100; // percent
 
-        $minWeight = 10000000;
+        $minWeight = 10_000_000;
         $maxWeight = 0;
 
         if (!$tags) {

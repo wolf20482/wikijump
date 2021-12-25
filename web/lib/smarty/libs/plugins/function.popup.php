@@ -21,6 +21,9 @@
  */
 function smarty_function_popup($params, &$smarty)
 {
+    $text = null;
+    $function = null;
+    $trigger = null;
     $append = '';
     foreach ($params as $_key=>$_value) {
         switch ($_key) {
@@ -28,7 +31,7 @@ function smarty_function_popup($params, &$smarty)
             case 'trigger':
             case 'function':
             case 'inarray':
-                $$_key = (string)$_value;
+                ${$_key} = (string)$_value;
                 if ($_key == 'function' || $_key == 'inarray')
                     $append .= ',' . strtoupper($_key) . ",'$_value'";
                 break;

@@ -38,10 +38,7 @@ class PageRevision extends PageRevisionBase
         return User::find($this->getUserId());
     }
 
-    /**
-    * @return User|string
-    */
-    public function getUserOrString()
+    public function getUserOrString(): string|User
     {
         $user = $this->getUser();
         if ($user == null) {
@@ -87,7 +84,7 @@ class PageRevision extends PageRevisionBase
                 $tkey = "pagerevisions_lc..".$page->getPageId();
                 Cache::put($tkey, time(), 3600);
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
 
         parent::save();

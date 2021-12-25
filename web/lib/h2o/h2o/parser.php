@@ -43,14 +43,9 @@ class H2o_Lexer {
 class H2o_Parser {
     var $first;
     var $storage = array();
-    var $filename;
-    var $runtime;
 
     function __construct($source, $filename, $runtime, $options) {
         $this->options = $options;
-        //$this->source = $source;
-        $this->runtime = $runtime;
-        $this->filename = $filename;
         $this->first = true;
 
         $this->lexer = new H2o_Lexer($options);
@@ -63,6 +58,7 @@ class H2o_Parser {
     }
 
     function &parse() {
+        $node = null;
         $until = func_get_args();
         $nodelist = new NodeList($this);
         while($token = $this->tokenstream->next()) {
@@ -87,7 +83,7 @@ class H2o_Parser {
                     }
                     $temp = preg_split('/\s+/',$token->content, 2);
                     $name = $temp[0];
-                    $args = (count($temp) > 1 ? $temp[1] : null);
+                    $args = ((is_countable($temp) ? count($temp) : 0) > 1 ? $temp[1] : null);
                     $node = H2o::createTag($name, $args, $this, $token->position);
                     $this->token = $token;
             }
@@ -115,7 +111,7 @@ class H2o_Parser {
         $filter_buffer = array();
         $tokens = $parser->parse();
         foreach ($tokens as $token) {
-            list($token, $data) = $token;
+            [$token, $data] = $token;
             if ($token == 'filter_start') {
                 $filter_buffer = array();
                 $current_buffer = &$filter_buffer;
@@ -144,7 +140,7 @@ class H2o_Parser {
                     $current_buffer[] = array();
 
                 $namedArgs =& $current_buffer[count($current_buffer) - 1];
-                list($name,$value) = array_map('trim', explode(':', $data, 2));
+                [$name, $value] = array_map('trim', explode(':', $data, 2));
 
                 # if argument value is variable mark it
                 $value = self::parseArguments($value);
@@ -193,7 +189,7 @@ class ArgumentLexer {
     private $source;
     private $match;
     private $pos = 0, $fpos, $eos;
-    private $operator_map = array(
+    private array $operator_map = array(
         '!' => 'not', '!='=> 'ne', '==' => 'eq', '>' => 'gt', '<' => 'lt', '<=' => 'le', '>=' => 'ge'
     );
 

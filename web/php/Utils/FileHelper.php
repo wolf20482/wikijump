@@ -37,6 +37,6 @@ class FileHelper
         if ($size == 0) {
             return "0 Bytes";
         }
-        return round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $filesizename[$i];
+        return round($size/1024 ** ($i = floor(log($size, 1024))), 2) . $filesizename[$i];
     }
 }

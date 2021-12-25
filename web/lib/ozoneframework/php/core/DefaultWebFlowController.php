@@ -12,6 +12,7 @@ use Wikijump\Helpers\LegacyTools;
 class DefaultWebFlowController extends WebFlowController {
 
 	public function process() {
+		$out = null;
 		global $timeStart;
 
         Log::info('[OZONE] Received web request');

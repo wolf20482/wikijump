@@ -57,7 +57,13 @@ class Text_Wiki_Render_Xhtml_Wikilink extends Text_Wiki_Render {
 
     function token($options)
     {
-        /**
+        $site = null;
+								$page = null;
+								$text = null;
+								$textFromTitle = null;
+								$anchor = null;
+								$nonbr = null;
+								/**
          * NOTE: This renderer handles both the Wikilink and Freelink parse objects.
          * @see Text_Wiki_Render_Xhtml_Freelink
          *
@@ -141,7 +147,7 @@ class Text_Wiki_Render_Xhtml_Wikilink extends Text_Wiki_Render {
             // form that uses %s for sprintf()
             $href = $this->getConf('view_url');
 
-            if (strpos($href, '%s') === false) {
+            if (!str_contains($href, '%s')) {
                 // use the old form (page-at-end)
                 $href = $href . $page . $anchor;
             } else {
@@ -175,7 +181,7 @@ class Text_Wiki_Render_Xhtml_Wikilink extends Text_Wiki_Render {
                 // it.  we support both the old form where
                 // the page always comes at the end, and the new
                 // form that uses sprintf()
-                if (strpos($href, '%s') === false) {
+                if (!str_contains($href, '%s')) {
                     // use the old form
                     $href = $href . $page;
                 } else {

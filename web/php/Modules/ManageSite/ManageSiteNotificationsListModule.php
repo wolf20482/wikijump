@@ -36,7 +36,7 @@ class ManageSiteNotificationsListModule extends ManageSiteBaseModule
 
         // now see if number of selected is equal $perPage + 1. If so -
         // there is at least 1 more page to show...
-        $counted = count($nots);
+        $counted = is_countable($nots) ? count($nots) : 0;
         $pagerData = array();
         $pagerData['current_page'] = $pageNumber;
         if ($counted >$perPage*2) {

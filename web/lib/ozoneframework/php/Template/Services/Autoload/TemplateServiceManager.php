@@ -14,11 +14,10 @@ use Wikijump\Helpers\LegacyTools;
  */
 class TemplateServiceManager extends TemplateService{
 	protected $serviceName = "serviceManager";
-	private $runData;
 	protected $storage = array();
 
-	public function __construct($runData){
-		$this->runData = $runData;
+	public function __construct(private $runData)
+	{
 	}
 
 	public function getService($class){

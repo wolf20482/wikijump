@@ -43,7 +43,7 @@ class Text_Wiki_Render_Xhtml_File extends Text_Wiki_Render {
         $file = $options['file'];
         $anchor = $options['anchor'];
 
-        if (strpos($file, '/') !== false) {
+        if (str_contains($file, '/')) {
         		// ok, hardcode the path... sorry.
         		$file = preg_replace("/^\//", '', $file);
         		$file = "/local--files/".$file;

@@ -16,7 +16,7 @@ class GlobalIpBlockBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='global_ip_block';
-        $this->peerName = 'Wikidot\\DB\\GlobalIpBlockPeer';
+        $this->peerName = GlobalIpBlockPeer::class;
         $this->primaryKeyName = 'block_id';
         $this->fieldNames = array( 'block_id' ,  'address' ,  'flag_proxy' ,  'reason' ,  'flag_total' ,  'date_blocked' );
 

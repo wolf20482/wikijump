@@ -63,7 +63,7 @@ class SecurityManager {
         // So if you want to look up by their friendly name/username, use the `nick_name` column.
         // TODO: Clean up this behavior everywhere.
 
-        if (strpos($username, '@') !== false) {
+        if (str_contains($username, '@')) {
             $user = $this->getUserByEmail($username);
         } else {
             $user = $this->getUserByNickname($username);
@@ -146,6 +146,7 @@ class SecurityManager {
 	}
 
 	public function createGroup($name, $parentGroup=null){
+		$parentGroupObject = null;
 		if($parentGroup != null){
 			if(gettype($parentGroup) == "string"){
 				//	get object
@@ -263,7 +264,7 @@ class SecurityManager {
 		$tmparray2 = array();
 
 		$tmparray1=$this->getGroupChildren($groupObject);
-		while($tmparray1 != null && count($tmparray1)>0){
+		while($tmparray1 != null && (is_countable($tmparray1) ? count($tmparray1) : 0)>0){
 			foreach($tmparray1 as $g1){
 				$tchildren = $this->getGroupChildren($g1);
 				if($tchildren != null){

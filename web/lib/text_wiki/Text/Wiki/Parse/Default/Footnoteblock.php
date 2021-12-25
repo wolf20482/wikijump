@@ -51,7 +51,7 @@ class Text_Wiki_Parse_Footnoteblock extends Text_Wiki_Parse {
     {
     		$footnotes = $this->wiki->vars['footnotes'];
     		if($footnotes == null) { return '';}
-    		else if (count($footnotes) == 0){return '';} // render nothing if no footnotes.
+    		else if ((is_countable($footnotes) ? count($footnotes) : 0) == 0){return '';} // render nothing if no footnotes.
     		$inside = '';
     		$fni = $this->wiki->parseObj['Footnoteitem'];
 

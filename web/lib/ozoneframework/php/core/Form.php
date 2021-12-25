@@ -10,28 +10,24 @@ namespace Ozone\Framework;
  */
 class Form {
 
-//	private $formxml; //definition of the form!
-
-	private $name;
-	private $formKey="_0"; //default formKey
+//default formKey
 
 	private $fields;
 
-	private $fieldValues = array();
+	private array $fieldValues = array();
 
-	private $errorMessages = array();
-	private $isValidAll = true;
-	private $isValidArray = array();
+	private array $errorMessages = array();
+	private bool $isValidAll = true;
+	private array $isValidArray = array();
 
-	private $validated = false;
+	private bool $validated = false;
 
 	private $validatorName = null;
 
-	private $retrieved = false;
+	private bool $retrieved = false;
 
-	public function __construct($formName, $formKey = "_0"){
-		$this->name = $formName;
-		$this->formKey = $formKey;
+	public function __construct(private $name, private $formKey = "_0")
+	{
 	}
 
 	public function getName(){
@@ -221,7 +217,7 @@ class Form {
 		if($fieldType=="select" || $fieldType=="textarea"){
 			if($attributes !== null){
 				foreach($attributes as $key => $value){
-					if($key!=type){
+					if($key!=\TYPE){
 						$out.=' '.$key.'="'.$value.'" ';
 					}
 				}

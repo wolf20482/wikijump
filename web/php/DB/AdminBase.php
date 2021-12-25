@@ -16,7 +16,7 @@ class AdminBase extends BaseDBObject
     protected function internalInit()
     {
         $this->tableName='admin';
-        $this->peerName = 'Wikidot\\DB\\AdminPeer';
+        $this->peerName = AdminPeer::class;
         $this->primaryKeyName = 'admin_id';
         $this->fieldNames = array( 'admin_id' ,  'site_id' ,  'user_id' ,  'founder' );
 

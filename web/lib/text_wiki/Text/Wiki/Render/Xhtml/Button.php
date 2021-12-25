@@ -88,7 +88,7 @@ class Text_Wiki_Render_Xhtml_Button extends Text_Wiki_Render {
     	if($style){
     		$out .= 'style="'.htmlspecialchars($style).'" ';
     	}
-    	$out .= 'href="'.($hrefs[$type]?$hrefs[$type]:'javascript:;').'" ';
+    	$out .= 'href="'.($hrefs[$type] ?: 'javascript:;').'" ';
     	$out .= ($jsOnclick[$type]?'onclick="'.$jsOnclick[$type].'" ':' ');
 
     	$out .= '>';

@@ -85,7 +85,8 @@ class Text_Wiki_Parse_Freelink extends Text_Wiki_Parse {
 
     function process(&$matches)
     {
-        // use nice variable names
+        $nonbr = null;
+								// use nice variable names
         $page = $matches[1];
         $text = $matches[3];
         $anchor = $matches[2];

@@ -23,6 +23,9 @@ class AjaxModuleWikiFlowController extends WebFlowController
 
     public function process()
     {
+        $glang = null;
+        $rendered = null;
+        $module = null;
         global $timeStart;
 
         Ozone::init();

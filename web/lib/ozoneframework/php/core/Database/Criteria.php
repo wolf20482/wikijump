@@ -12,7 +12,7 @@ use Ozone\Framework\ODate;
  */
 class Criteria{
 
-	private $distinct = false;
+	private bool $distinct = false;
 
 	private $explicitQuery;
 	private $explicitWhere;
@@ -22,11 +22,11 @@ class Criteria{
 	private $limitOffset;
 	private $limitCount;
 
-	private $forUpdate = false;
+	private bool $forUpdate = false;
 
-	private $conditions = array();
-	private $order = array();
-	private $groupBy = array();
+	private array $conditions = array();
+	private array $order = array();
+	private array $groupBy = array();
 
 	/**
 	 * If processing joins the variable is an array with entries (arrays) with keys:

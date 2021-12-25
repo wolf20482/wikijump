@@ -106,7 +106,7 @@ class ManageSiteForumAction
         $db->begin();
 
         // compare against stored groups and categories. add if necessary, delete if necessary etc.
-        for ($i = 0; $i < count($groups0); $i++) {
+        for ($i = 0; $i < (is_countable($groups0) ? count($groups0) : 0); $i++) {
             $group = $groups0[$i];
             $g = null;
             if ($group['group_id'] == null) {
@@ -151,7 +151,7 @@ class ManageSiteForumAction
             }
             // now proceed with categories for this group!!!
             $cates = $cats0[$i];
-            for ($j=0; $j<count($cates); $j++) {
+            for ($j=0; $j<(is_countable($cates) ? count($cates) : 0); $j++) {
                 $cat = $cates[$j];
                 if ($cat['category_id'] == null) {
                     // new category!
@@ -220,7 +220,7 @@ class ManageSiteForumAction
         // now process deleted groups...
 
         $dgroups = $json->decode($pl->getParameterValue("deleted_groups"));
-        for ($i = 0; $i < count($dgroups); $i++) {
+        for ($i = 0; $i < (is_countable($dgroups) ? count($dgroups) : 0); $i++) {
             $group = $dgroups[$i];
             // check if has group_id - if not, this should not be in the database...
             if ($group['group_id'] !== null) {

@@ -165,6 +165,7 @@ class ForumAction extends SmartyAction
 
     public function savePostEvent($runData)
     {
+        $userString = null;
         $pl = $runData->getParameterList();
         $site = $runData->getTemp("site");
 
@@ -294,6 +295,7 @@ class ForumAction extends SmartyAction
 
     public function saveEditPostEvent($runData)
     {
+        $userString = null;
         $pl = $runData->getParameterList();
         $site = $runData->getTemp("site");
 
@@ -719,7 +721,7 @@ class ForumAction extends SmartyAction
 
         try {
             WDPermissionManager::instance()->hasForumPermission('moderate_forum', $runData->getUser(), $category);
-        } catch (Exception $e) {
+        } catch (Exception) {
             throw new WDPermissionException(_("Sorry, you are not allowed to delete posts. Only site administrators and moderators are the ones who can."));
         }
 
@@ -729,7 +731,7 @@ class ForumAction extends SmartyAction
 
         $chposts =  ForumPostPeer::instance()->select($c);
 
-        while ($chposts && count($chposts) >0) {
+        while ($chposts && (is_countable($chposts) ? count($chposts) : 0) >0) {
             $toDelete = array_merge($toDelete, $chposts);
 
             $c = new Criteria();
