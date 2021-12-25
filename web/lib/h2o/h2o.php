@@ -3,13 +3,13 @@ define('H2O_VERSION', '0.3');
 defined('DS') or define('DS', DIRECTORY_SEPARATOR);
 defined('H2O_ROOT') or define('H2O_ROOT', dirname(__FILE__) . DS);
 
-require H2O_ROOT.'h2o/datatype.php';
-require H2O_ROOT.'h2o/loaders.php';
-require H2O_ROOT.'h2o/nodes.php';
-require H2O_ROOT.'h2o/tags.php';
-require H2O_ROOT.'h2o/errors.php';
-require H2O_ROOT.'h2o/filters.php';
-require H2O_ROOT.'h2o/context.php';
+require_once H2O_ROOT.'h2o/datatype.php';
+require_once H2O_ROOT.'h2o/loaders.php';
+require_once H2O_ROOT.'h2o/nodes.php';
+require_once H2O_ROOT.'h2o/tags.php';
+require_once H2O_ROOT.'h2o/errors.php';
+require_once H2O_ROOT.'h2o/filters.php';
+require_once H2O_ROOT.'h2o/context.php';
 
 /**
  * Example:
@@ -100,7 +100,7 @@ class H2o {
             $env = $this->options;
 
         if (!class_exists('H2o_Parser', false))
-            require H2O_ROOT.'h2o/parser.php';
+            require_once H2O_ROOT.'h2o/parser.php';
 
         $parser = new H2o_Parser($source, $filename, $this, $env);
         $nodelist = $parser->parse();

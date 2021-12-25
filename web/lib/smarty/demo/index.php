@@ -1,6 +1,6 @@
 <?php
 
-require '../libs/Smarty.class.php';
+require_once '../libs/Smarty.class.php';
 
 $smarty = new Smarty;
 

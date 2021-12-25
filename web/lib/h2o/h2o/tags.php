@@ -355,7 +355,7 @@ class Cycle_Tag extends H2o_Node {
     }
 
     function render($context, $stream) {
-        $item = $context->getVariable($this->uid)
+        $item = $context->getVariable($this->uid);
         if ($item !== null) {
             $item = ($item + 1) % count($this->sequence);
         } else {

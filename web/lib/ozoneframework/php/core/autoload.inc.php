@@ -48,7 +48,7 @@ spl_autoload_register(function ($class) {
     }
             $file = str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
             if (stream_resolve_include_path($file)) {
-		    require $file;
+		    require_once $file;
 		    if(GlobalProperties::$LOGGER_LEVEL == "debug") {
                 trigger_error("Loaded $file for $class");
             }

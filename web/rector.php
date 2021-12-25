@@ -11,9 +11,15 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 return static function (ContainerConfigurator $containerConfigurator): void {
     // get parameters
     $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [__DIR__ . '/lib', __DIR__ . '/php']);
+    // $parameters->set(Option::PATHS, [__DIR__ . '/lib', __DIR__ . '/php']);
 
+    $parameters->set(OPTION::AUTO_IMPORT_NAMES, true);
     $parameters->set(Option::PHP_VERSION_FEATURES, PhpVersion::PHP_81);
+    $parameters->set(Option::AUTOLOAD_PATHS, [__DIR__ . '/vendor/autoload.php']);
+    $parameters->set(Option::BOOTSTRAP_FILES, [
+        __DIR__ . '/php/setup.php',
+        __DIR__ . '/app/Helpers/helpers.php',
+    ]);
 
     // Define what rule sets will be applied
     // $containerConfigurator->import(SetList::CODE_QUALITY);

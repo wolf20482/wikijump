@@ -4,7 +4,7 @@ use Ozone\Framework\Ozone;
 use Ozone\Framework\RunData;
 
 chdir(dirname(__FILE__)); // unifies CLI/CGI cwd handling
-require ('../php/setup.php');
+require_once ('../php/setup.php');
 
 // initialize things now
 
