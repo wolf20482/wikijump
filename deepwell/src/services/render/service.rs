@@ -18,6 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use super::includer::PageIncluder;
 use super::prelude::*;
 use crate::models::page::Model as PageModel;
 use crate::services::{JobService, PageService, TextService};

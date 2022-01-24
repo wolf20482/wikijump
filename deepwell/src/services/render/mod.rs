@@ -32,6 +32,7 @@ mod prelude {
     };
 }
 
+mod includer;
 mod service;
 mod structs;
 
