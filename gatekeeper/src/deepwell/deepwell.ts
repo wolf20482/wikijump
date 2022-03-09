@@ -17,9 +17,6 @@ export class DeepwellAPI extends GotClient {
     return await this.get(`message/${locale}/${key}`, { json: values }).json<string>()
   }
 
-  async getPage(site: null, id: number, opts?: GetPageOpts): Promise<Page | null>
-  async getPage(site: number, id: number, opts?: GetPageOpts): Promise<Page | null>
-  async getPage(site: number, slug: string, opts?: GetPageOpts): Promise<Page | null>
   async getPage(site: number | null, id: number | string, opts: GetPageOpts = {}) {
     if (site === null && typeof id === "string") {
       throw new Error("Site must be specified for slugs")
