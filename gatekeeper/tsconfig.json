@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "useDefineForClassFields": true,
+    "experimentalDecorators": true,
+    "lib": ["ESNext", "WebWorker"],
+    "types": ["vite/client"],
+
+    "importsNotUsedAsValues": "error",
+    "preserveValueImports": true,
+    "isolatedModules": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "sourceMap": true,
+    "noEmit": true,
+  },
+
+  "typeAcquisition": {
+    "enable": true,
+    "disableFilenameBasedTypeAcquisition": true
+  },
+
+  "include": ["vite.config.ts", "./app.ts", "src/**/*.ts"],
+
+  "exclude": ["**/node_modules/**", "**/dist/**"]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "gatekeeper",
+  "version": "0.0.0",
+  "description": "API server for Wikijump.",
+  "private": true,
+  "license": "agpl-3.0-or-later",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "fastify": "^4.0.0-alpha.1",
+    "got": "^12.0.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.14.0",
+    "@typescript-eslint/parser": "^5.14.0",
+    "@typescript-eslint/typescript-estree": "^5.14.0",
+    "eslint": "^8.10.0",
+    "eslint-plugin-regexp": "^1.5.1",
+    "eslint-plugin-tsdoc": "^0.2.14",
+    "prettier": "^2.5.1",
+    "prettier-plugin-jsdoc": "^0.3.30",
+    "prettier-plugin-organize-imports": "^2.3.4",
+    "typescript": "^4.6.2",
+    "vite": "^2.8.6",
+    "vite-plugin-node": "^0.0.17"
+  }
+}
