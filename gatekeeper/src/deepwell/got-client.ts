@@ -9,7 +9,9 @@ import got, {
 
 export class GotClient {
   private readonly gotDefaults = new Options({
-    prefixUrl: "http://api:2747/api/vI/",
+    prefixUrl: import.meta.env.PROD
+      ? "http://api:2747/api/vI/"
+      : "http://localhost:2747/api/vI/",
     // TODO: timeout:
     responseType: "json",
     headers: {
