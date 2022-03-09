@@ -13,7 +13,7 @@ export class DeepwellAPI extends GotClient {
     return await this.get(`locale/${locale}`).json<LocaleOutput>()
   }
 
-  async translate(locale: string, key: string, values: Record<string, string>) {
+  async translate(locale: string, key: string, values: Record<string, string> = {}) {
     return await this.get(`message/${locale}/${key}`, { json: values }).json<string>()
   }
 
