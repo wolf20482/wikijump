@@ -38,7 +38,7 @@ export class GotClient {
     this.try = new Proxy(this, {
       get: (target, key, receiver) => {
         if (key in GotClient.prototype) {
-          return (...args: any[]) => {
+          return async (...args: any[]) => {
             try {
               // @ts-ignore
               const res = await this[key](...args)
