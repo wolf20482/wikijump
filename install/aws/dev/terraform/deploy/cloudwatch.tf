@@ -1,3 +1,8 @@
+resource "aws_cloudwatch_log_group" "api" {
+  name              = "ecs/api-${var.environment}"
+  retention_in_days = "7"
+}
+
 resource "aws_cloudwatch_log_group" "cache" {
   name              = "ecs/cache-${var.environment}"
   retention_in_days = "7"
