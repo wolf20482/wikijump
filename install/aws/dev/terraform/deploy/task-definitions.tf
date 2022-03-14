@@ -186,7 +186,7 @@ module "php-fpm" {
     }
   ]
 
-  links = ["api:api", "cache:cache", "database:database"]
+  links = ["cache:cache", "database:database"]
 
   secrets = [
     {
