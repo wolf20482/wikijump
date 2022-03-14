@@ -177,12 +177,16 @@ module "php-fpm" {
 
   container_depends_on = [
     {
+      containerName = "api"
+      condition     = "HEALTHY"
+    },
+    {
       containerName = "database"
       condition     = "HEALTHY"
     }
   ]
 
-  links = ["cache:cache", "database:database"]
+  links = ["api:api", "cache:cache", "database:database"]
 
   secrets = [
     {
