@@ -176,10 +176,10 @@ module "php-fpm" {
   }
 
   container_depends_on = [
-    {
-      containerName = "api"
-      condition     = "HEALTHY"
-    },
+#    {
+#      containerName = "api"
+#      condition     = "HEALTHY"
+#    },
     {
       containerName = "database"
       condition     = "HEALTHY"
