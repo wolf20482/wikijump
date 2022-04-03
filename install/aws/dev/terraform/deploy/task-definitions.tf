@@ -1,55 +1,55 @@
-module "api" {
-  source = "../modules/secure-container-definitions"
-
-  container_name               = "api"
-  container_image              = "${data.aws_ssm_parameter.API_ECR_URL.value}:develop"
-  container_memory_reservation = var.ecs_api_memory / 8
-  essential                    = true
-  environment                  = []
-
-  log_configuration = {
-    logDriver = "awslogs"
-    options = {
-      "awslogs-group"         = "ecs/api-${var.environment}"
-      "awslogs-region"        = var.region
-      "awslogs-stream-prefix" = "ecs"
-    }
-  }
-
-  container_depends_on = [
-    {
-      containerName = "database"
-      condition     = "HEALTHY"
-    }
-  ]
-
-  links = ["database:database"]
-
-  secrets = [
-    {
-      name      = "RATE_LIMIT_SECRET"
-      valueFrom = var.api_ratelimit_secret
-    },
-    {
-      name      = "WIKIJUMP_DB_HOST"
-      valueFrom = aws_ssm_parameter.DB_HOST.name
-    }
-  ]
-
-  docker_labels = {
-    "com.datadoghq.ad.check_names"  = "[\"api\"]",
-    "com.datadoghq.ad.init_configs" = "[{}]",
-    "com.datadoghq.ad.instances"    = "{\"url\":\"%%host%%\",\"port\":\"11211\"}"
-  }
-
-  healthcheck = {
-    command     = ["CMD", "wikijump-health-check"]
-    retries     = 6
-    timeout     = 5
-    interval    = 5
-    startPeriod = 0
-  }
-}
+###module "api" {
+###  source = "../modules/secure-container-definitions"
+###
+###  container_name               = "api"
+###  container_image              = "${data.aws_ssm_parameter.API_ECR_URL.value}:develop"
+###  container_memory_reservation = var.ecs_api_memory / 8
+###  essential                    = true
+###  environment                  = []
+###
+###  log_configuration = {
+###    logDriver = "awslogs"
+###    options = {
+###      "awslogs-group"         = "ecs/api-${var.environment}"
+###      "awslogs-region"        = var.region
+###      "awslogs-stream-prefix" = "ecs"
+###    }
+###  }
+###
+###  container_depends_on = [
+###    {
+###      containerName = "database"
+###      condition     = "HEALTHY"
+###    }
+###  ]
+###
+###  links = ["database:database"]
+###
+###  secrets = [
+###    {
+###      name      = "RATE_LIMIT_SECRET"
+###      valueFrom = var.api_ratelimit_secret
+###    },
+###    {
+###      name      = "WIKIJUMP_DB_HOST"
+###      valueFrom = aws_ssm_parameter.DB_HOST.name
+###    }
+###  ]
+###
+###  docker_labels = {
+###    "com.datadoghq.ad.check_names"  = "[\"api\"]",
+###    "com.datadoghq.ad.init_configs" = "[{}]",
+###    "com.datadoghq.ad.instances"    = "{\"url\":\"%%host%%\",\"port\":\"11211\"}"
+###  }
+###
+###  healthcheck = {
+###    command     = ["CMD", "wikijump-health-check"]
+###    retries     = 6
+###    timeout     = 5
+###    interval    = 5
+###    startPeriod = 0
+###  }
+###}
 
 module "cache" {
   source = "github.com/cloudposse/terraform-aws-ecs-container-definition?ref=0.56.0"
