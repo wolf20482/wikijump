@@ -1,3 +1,56 @@
+###module "api" {
+###  source = "../modules/secure-container-definitions"
+###
+###  container_name               = "api"
+###  container_image              = "${data.aws_ssm_parameter.API_ECR_URL.value}:develop"
+###  container_memory_reservation = var.ecs_api_memory / 8
+###  essential                    = true
+###  environment                  = []
+###
+###  log_configuration = {
+###    logDriver = "awslogs"
+###    options = {
+###      "awslogs-group"         = "ecs/api-${var.environment}"
+###      "awslogs-region"        = var.region
+###      "awslogs-stream-prefix" = "ecs"
+###    }
+###  }
+###
+###  container_depends_on = [
+###    {
+###      containerName = "database"
+###      condition     = "HEALTHY"
+###    }
+###  ]
+###
+###  links = ["database:database"]
+###
+###  secrets = [
+###    {
+###      name      = "RATE_LIMIT_SECRET"
+###      valueFrom = var.api_ratelimit_secret
+###    },
+###    {
+###      name      = "WIKIJUMP_DB_HOST"
+###      valueFrom = aws_ssm_parameter.DB_HOST.name
+###    }
+###  ]
+###
+###  docker_labels = {
+###    "com.datadoghq.ad.check_names"  = "[\"api\"]",
+###    "com.datadoghq.ad.init_configs" = "[{}]",
+###    "com.datadoghq.ad.instances"    = "{\"url\":\"%%host%%\",\"port\":\"11211\"}"
+###  }
+###
+###  healthcheck = {
+###    command     = ["CMD", "wikijump-health-check"]
+###    retries     = 6
+###    timeout     = 5
+###    interval    = 5
+###    startPeriod = 0
+###  }
+###}
+
 module "cache" {
   source = "github.com/cloudposse/terraform-aws-ecs-container-definition?ref=0.56.0"
 
@@ -47,8 +100,9 @@ module "database" {
     "com.datadoghq.ad.init_configs" = "[{}]",
     "com.datadoghq.ad.instances"    = "[{\"host\":\"%%host%%\", \"port\":5432,\"username\":\"datadog\",\"password\":\"Ge07mcovAKvIT9WM\"}]"
   }
+
   healthcheck = {
-    command     = ["CMD", "pg_isready", "-d", "wikijump", "-U", "wikijump"]
+    command     = ["CMD", "wikijump-health-check"]
     retries     = 6
     timeout     = 5
     interval    = 5
@@ -95,7 +149,7 @@ module "nginx" {
   }
 
   healthcheck = {
-    command     = ["CMD-SHELL", "curl -f http://localhost"]
+    command     = ["CMD", "curl", "-f", "http://localhost"]
     interval    = 30
     timeout     = 5
     retries     = 3
@@ -123,6 +177,10 @@ module "php-fpm" {
 
   container_depends_on = [
     {
+      containerName = "api"
+      condition     = "HEALTHY"
+    },
+    {
       containerName = "database"
       condition     = "HEALTHY"
     }
@@ -131,6 +189,10 @@ module "php-fpm" {
   links = ["cache:cache", "database:database"]
 
   secrets = [
+    {
+      name      = "WIKIJUMP_API_RATE_LIMIT_SECRET"
+      valueFrom = var.api_ratelimit_secret
+    },
     {
       name      = "WIKIJUMP_URL_DOMAIN"
       valueFrom = aws_ssm_parameter.URL_DOMAIN.name

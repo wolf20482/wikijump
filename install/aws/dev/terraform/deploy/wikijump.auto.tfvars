@@ -16,6 +16,9 @@ ecs_cache_memory = 512
 ecs_cache_cpu    = 256
 ecs_cache_image  = "memcached:1.6-alpine"
 
+ecs_api_memory = 512
+ecs_api_cpu    = 1024
+
 ecs_db_memory = 2048
 ecs_db_cpu    = 256
 
@@ -50,7 +53,8 @@ redeploy_ecs_on_tf_apply = true
 # unique credentials, we store some vars in terraform cloud as terraform vars
 # there. Generally speaking some sort of secret store is better than putting
 # sensitive keys in a .tfvars file. You need these vars to plan or deploy.
-# cf_auth_token      = "12345678-abcd-1234-5678-1234567890ab"
-# route53_access_key = "AEXAMPLEAPIKEY1234"
-# route53_secret_key = "example123/abcdefghijklmnopqrstuvwxyzABC"
-# datadog_api_key    = "1234567890abcdef1234567890abcdef"
+# cf_auth_token        = "12345678-abcd-1234-5678-1234567890ab"
+# route53_access_key   = "AEXAMPLEAPIKEY1234"
+# route53_secret_key   = "example123/abcdefghijklmnopqrstuvwxyzABC"
+# datadog_api_key      = "1234567890abcdef1234567890abcdef"
+# api_ratelimit_secret = "1234567890abdefghijklmnopqrstuvwxyz1234567890abdefghijklmnopqrst"
