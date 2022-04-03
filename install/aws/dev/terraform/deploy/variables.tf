@@ -46,16 +46,6 @@ variable "availability_zone" {
   default = "a"
 }
 
-variable "ecs_api_memory" {
-  type    = number
-  default = 512
-}
-
-variable "ecs_api_cpu" {
-  type    = number
-  default = 1024
-}
-
 variable "ecs_cache_memory" {
   type    = number
   default = 512
@@ -139,11 +129,6 @@ variable "route53_access_key" {
 }
 
 variable "route53_secret_key" {
-  type      = string
-  sensitive = true
-}
-
-variable "api_ratelimit_secret" {
   type      = string
   sensitive = true
 }

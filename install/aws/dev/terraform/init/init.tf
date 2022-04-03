@@ -16,12 +16,6 @@ provider "aws" {
   region = local.region
 }
 
-resource "aws_ssm_parameter" "API_ECR_URL" {
-  name  = "wikijump-${local.environment}-API_ECR_URL"
-  type  = "String"
-  value = aws_ecr_repository.php_ecr.repository_url
-}
-
 resource "aws_ssm_parameter" "PHP_ECR_URL" {
   name  = "wikijump-${local.environment}-PHP_ECR_URL"
   type  = "String"
@@ -38,16 +32,6 @@ resource "aws_ssm_parameter" "DB_ECR_URL" {
   name  = "wikijump-${local.environment}-DB_ECR_URL"
   type  = "String"
   value = aws_ecr_repository.db_ecr.repository_url
-}
-
-resource "aws_ecr_repository" "api_ecr" {
-  name = "wikijump-${local.environment}/api"
-  encryption_configuration {
-    encryption_type = "KMS"
-  }
-  image_scanning_configuration {
-    scan_on_push = true
-  }
 }
 
 resource "aws_ecr_repository" "php_ecr" {
