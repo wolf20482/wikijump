@@ -1,5 +1,5 @@
 module "api" {
-  source = "../modules/secure-container-definitions"
+  source = "github.com/cloudposse/terraform-aws-ecs-container-definition?ref=0.56.0"
 
   container_name               = "api"
   container_image              = "${data.aws_ssm_parameter.API_ECR_URL.value}:develop"
