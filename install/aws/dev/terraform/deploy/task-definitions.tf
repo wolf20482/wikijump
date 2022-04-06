@@ -189,10 +189,10 @@ module "php-fpm" {
   links = ["cache:cache", "database:database"]
 
   secrets = [
-    {
-      name      = "WIKIJUMP_API_RATE_LIMIT_SECRET"
-      valueFrom = var.api_ratelimit_secret
-    },
+#    {
+#      name      = "WIKIJUMP_API_RATE_LIMIT_SECRET"
+#      valueFrom = var.api_ratelimit_secret
+#    },
     {
       name      = "WIKIJUMP_URL_DOMAIN"
       valueFrom = aws_ssm_parameter.URL_DOMAIN.name
