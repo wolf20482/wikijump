@@ -26,14 +26,14 @@ module "api" {
   links = ["database:database"]
 
   secrets = [
-    {
-      name      = "RATE_LIMIT_SECRET"
-      valueFrom = var.api_ratelimit_secret
-    },
-    {
-      name      = "WIKIJUMP_DB_HOST"
-      valueFrom = aws_ssm_parameter.DB_HOST.name
-    }
+#    {
+#      name      = "RATE_LIMIT_SECRET"
+#      valueFrom = var.api_ratelimit_secret
+#    },
+#    {
+#      name      = "WIKIJUMP_DB_HOST"
+#      valueFrom = aws_ssm_parameter.DB_HOST.name
+#    }
   ]
 
   docker_labels = {
