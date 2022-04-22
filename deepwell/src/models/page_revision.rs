@@ -13,7 +13,7 @@ pub struct Model {
     pub page_id: i64,
     pub site_id: i64,
     pub user_id: i64,
-    pub changes: Json,
+    pub changes: Vec<String>,
     pub wikitext_hash: Vec<u8>,
     pub compiled_hash: Vec<u8>,
     pub compiled_at: DateTimeWithTimeZone,
@@ -28,7 +28,7 @@ pub struct Model {
     pub alt_title: Option<String>,
     #[sea_orm(column_type = "Text")]
     pub slug: String,
-    pub tags: Json,
+    pub tags: Vec<String>,
     pub metadata: Json,
 }
 
