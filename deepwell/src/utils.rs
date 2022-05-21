@@ -19,6 +19,7 @@
  */
 
 use chrono::{DateTime, FixedOffset, Utc};
+use rand::CryptoRng;
 
 pub fn replace_in_place(string: &mut String, pattern: &str, replacement: &str) {
     while let Some(index) = string.find(pattern) {
@@ -36,3 +37,10 @@ lazy_static! {
 pub fn now() -> DateTime<FixedOffset> {
     Utc::now().with_timezone(&*UTC)
 }
+
+/// Statically verifies if this random number generator is a secure.
+///
+/// The build will fail if the passed generator is not a CSPRNG
+/// (cryptographically-secure psuedorandom number generator).
+#[inline]
+pub fn assert_is_csprng(_: &dyn CryptoRng) {}
