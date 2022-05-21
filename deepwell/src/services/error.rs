@@ -40,6 +40,9 @@ pub enum Error {
     #[error("Localization error: {0}")]
     Localization(#[from] LocalizationTranslateError),
 
+    #[error("One-time password error: {0}")]
+    Otp(#[from] otp::Error),
+
     #[error("Serialization error: {0}")]
     Serde(#[from] serde_json::Error),
 
@@ -48,6 +51,9 @@ pub enum Error {
 
     #[error("Invalid enum serialization value")]
     InvalidEnumValue,
+
+    #[error("Invalid username, password, or TOTP code")]
+    InvalidAuthentication,
 
     #[error("The request is in some way malformed or incorrect")]
     BadRequest,
@@ -72,10 +78,14 @@ impl Error {
                 TideError::new(StatusCode::InternalServerError, inner)
             }
             Error::Localization(inner) => TideError::new(StatusCode::NotFound, inner),
+            Error::Otp(inner) => TideError::new(StatusCode::InternalServerError, inner),
             Error::Serde(inner) => TideError::new(StatusCode::InternalServerError, inner),
             Error::Web(inner) => inner,
             Error::InvalidEnumValue => {
                 TideError::from_str(StatusCode::InternalServerError, "")
+            }
+            Error::InvalidAuthentication => {
+                TideError::from_str(StatusCode::Forbidden, "")
             }
             Error::BadRequest => TideError::from_str(StatusCode::BadRequest, ""),
             Error::Exists | Error::Conflict => {
