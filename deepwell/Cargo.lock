@@ -943,6 +943,7 @@ dependencies = [
  "intl-memoizer",
  "lazy_static",
  "otp",
+ "rand 0.8.5",
  "ref-map",
  "sea-orm",
  "sea-query",
