@@ -53,6 +53,7 @@ mod error;
 pub mod category;
 pub mod job;
 pub mod link;
+pub mod mfa;
 pub mod outdate;
 pub mod page;
 pub mod parent;

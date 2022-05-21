@@ -932,6 +932,7 @@ dependencies = [
  "color-backtrace",
  "crossfire",
  "cuid",
+ "data-encoding",
  "dotenv",
  "either",
  "fluent",
