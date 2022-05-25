@@ -16,6 +16,12 @@ resource "aws_ssm_parameter" "URL_UPLOAD_DOMAIN" {
   value = var.files_domain
 }
 
+resource "aws_ssm_parameter" "WIKIJUMP_API_RATE_LIMIT_SECRET" {
+  name  = "wikijump-${var.environment}-API_RATE_LIMIT_SECRET"
+  type  = "String"
+  value = var.api_ratelimit_secret
+}
+
 data "aws_ssm_parameter" "API_ECR_URL" {
   name = "wikijump-${var.environment}-API_ECR_URL"
 }
@@ -38,4 +44,8 @@ data "aws_ssm_parameter" "ecs_ami" {
 
 data "aws_ssm_parameter" "TRAEFIK_EFS_ID" {
   name = "wikijump-${var.environment}-TRAEFIK_EFS_ID"
+}
+
+data "aws_ssm_parameter" "WIKIJUMP_API_RATE_LIMIT_SECRET" {
+  name = "wikijump-${var.environment}-API_RATE_LIMIT_SECRET"
 }
