@@ -83,7 +83,28 @@ module "database" {
   container_image              = "${data.aws_ssm_parameter.DB_ECR_URL.value}:develop"
   container_memory_reservation = var.ecs_db_memory / 8
   essential                    = true
-  environment                  = []
+  environment = [
+    {
+      name  = "POSTGRES_DB"
+      value = "wikijump"
+    },
+    {
+      name  = "POSTGRES_USER"
+      value = "wikijump"
+    },
+    {
+      name  = "POSTGRES_PASSWORD"
+      value = "wikijump"
+    },
+    {
+      name  = "POSTGRES_HOST_AUTH_METHOD"
+      value = "md5"
+    },
+    {
+      name  = "POSTGRES_INITDB_ARGS"
+      value = "--locale en_US.UTF-8"
+    }
+  ]
 
   log_configuration = {
     logDriver = "awslogs"
