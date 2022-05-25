@@ -52,7 +52,7 @@ module "api" {
 }
 
 module "cache" {
-  source = "github.com/cloudposse/terraform-aws-ecs-container-definition?ref=0.56.0"
+  source = "github.com/cloudposse/terraform-aws-ecs-container-definition?ref=0.58.1"
 
   container_name               = "cache"
   container_image              = var.ecs_cache_image
