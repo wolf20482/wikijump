@@ -17,9 +17,9 @@ resource "aws_ssm_parameter" "URL_UPLOAD_DOMAIN" {
 }
 
 resource "aws_ssm_parameter" "WIKIJUMP_API_RATE_LIMIT_SECRET" {
-  name  = "wikijump-${var.environment}-API_RATE_LIMIT_SECRET"
-  type  = "String"
-  value = var.api_ratelimit_secret
+  name      = "wikijump-${var.environment}-API_RATE_LIMIT_SECRET"
+  type      = "String"
+  value     = var.api_ratelimit_secret
   overwrite = true
 }
 
