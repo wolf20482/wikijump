@@ -19,7 +19,7 @@ provider "aws" {
 resource "aws_ssm_parameter" "API_ECR_URL" {
   name  = "wikijump-${local.environment}-API_ECR_URL"
   type  = "String"
-  value = aws_ecr_repository.php_ecr.repository_url
+  value = aws_ecr_repository.api_ecr.repository_url
 }
 
 resource "aws_ssm_parameter" "PHP_ECR_URL" {
